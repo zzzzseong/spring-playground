@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import me.jisung.springplayground.BaseEntity;
+import me.jisung.springplayground.common.annotation.ExcelColumn;
 
 @Entity
 @Builder
@@ -22,9 +23,11 @@ public class ProductEntity extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ExcelColumn(headerName = "상품명")
     @Column(nullable = false)
     private String name;
 
+    @ExcelColumn(headerName = "상품가격")
     @Column(nullable = false)
     private Integer price;
 }
