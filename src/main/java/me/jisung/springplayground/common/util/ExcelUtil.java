@@ -6,7 +6,9 @@ import java.awt.Color;
 import me.jisung.springplayground.common.annotation.ExcelColumn;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import me.jisung.springplayground.common.exception.ApiErrorCode;
@@ -29,7 +31,6 @@ import org.springframework.http.HttpStatus;
 public class ExcelUtil {
 
     private static final int MAX_ROW_COUNT = 1_000_000;
-    private static final int MIN_ROW_COUNT = 1;
 
     private static final Color HEADER_COLOR = new Color(20, 171, 177);
     private static final short HEADER_HEIGHT = 500;
@@ -48,8 +49,7 @@ public class ExcelUtil {
      * @param sheetName 엑셀 시트 이름
      */
     public static void listToExcel(List<?> list, Class<?> clazz, HttpServletResponse response, String filename, String sheetName) {
-        if(list.size() <= MIN_ROW_COUNT) throw new ApiException(HttpStatus.BAD_REQUEST, "row count is too small - min row cnt: " + MIN_ROW_COUNT);
-        if(list.size() >= MAX_ROW_COUNT) throw new ApiException(HttpStatus.BAD_REQUEST, "row count is too long - max row cnt: " + MAX_ROW_COUNT);
+        if(list.size() >= MAX_ROW_COUNT) throw new ApiException(HttpStatus.BAD_REQUEST, "row length is too long - max row cnt: " + MAX_ROW_COUNT);
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet(sheetName);
@@ -77,9 +77,8 @@ public class ExcelUtil {
             XSSFCellStyle bodyStyle = (XSSFCellStyle) workbook.createCellStyle();
             setBodyCellStyle(bodyStyle);
 
-            for (int i = 0; i < list.size(); i++) {
+            for (Object element : list) {
                 Row row = sheet.createRow(rowCnt++);
-                Object element = list.get(i);
 
                 for (int j = 0; j < fieldList.size(); j++) {
                     Cell bodyCell = row.createCell(j);
@@ -91,41 +90,25 @@ public class ExcelUtil {
                         continue;
                     }
 
-                    bodyCell.setCellValue(value == null ? "" : value.toString());
+                    bodyCell.setCellValue(String.valueOf(value));
                 }
             }
-        } catch (IllegalAccessException e) {
-            throw new ApiException(e, ApiErrorCode.UNAUTHORIZED);
-        }
 
-        response.setContentType("ms-vnd/excel");
-        response.setHeader("Content-Disposition", "attachment;filename=" + filename);
+            response.setContentType("ms-vnd/excel");
+            response.setHeader("Content-Disposition", "attachment;filename=" + filename);
 
-        try {
             ServletOutputStream out = response.getOutputStream();
             workbook.write(out);
             workbook.close();
             out.close();
-        } catch (IOException e) {
+        } catch (IllegalAccessException | IOException e) {
             throw new ApiException(e, ApiErrorCode.UNAUTHORIZED);
         }
-
     }
 
-    private static void setHeaderCellStyle(XSSFCellStyle cellStyle, XSSFColor color) {
-        cellStyle.setFillForegroundColor(color);
-        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
-        cellStyle.setAlignment(HorizontalAlignment.CENTER);
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-        cellStyle.setBorderLeft(BorderStyle.THIN);
-        cellStyle.setBorderTop(BorderStyle.THIN);
-        cellStyle.setBorderRight(BorderStyle.THIN);
-        cellStyle.setBorderBottom(BorderStyle.THIN);
-    }
-
-    private static void setBodyCellStyle(CellStyle cellStyle) {
-        cellStyle.setAlignment(HorizontalAlignment.LEFT);
-        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+    public static String makeFilename(String subject) {
+        SimpleDateFormat now = new SimpleDateFormat(DateUtil.DATE_FORMAT);
+        return subject + "-" + now.format(new Date()) + ".xlsx";
     }
 
     private static List<Field> getFieldList(Class<?> clazz) {
@@ -138,5 +121,20 @@ public class ExcelUtil {
         for (Field field : fieldList) field.setAccessible(true);
 
         return fieldList;
+    }
+
+    private static void setHeaderCellStyle(XSSFCellStyle cellStyle, XSSFColor color) {
+        cellStyle.setFillForegroundColor(color);
+        cellStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+    }
+    private static void setBodyCellStyle(CellStyle cellStyle) {
+        cellStyle.setAlignment(HorizontalAlignment.LEFT);
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
     }
 }
