@@ -10,6 +10,8 @@ public enum ApiErrorCode {
 
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED"),
 
+    SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "SERVICE_UNAVAILABLE")
+
     ;
 
     private final HttpStatus httpStatus;

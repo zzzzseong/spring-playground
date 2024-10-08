@@ -13,6 +13,11 @@ public class ApiException extends RuntimeException {
      * @param exception: 스택 정보와 메시지, 컨텍스트 정보 등을 전달하기 위해 기존에 발생했던 예외를 전달받아 상위 클래스에 전달한다.
      * @param errorCode: ApiException 처리를 위해 미리 정의해둔 enum 코드
      * */
+    public ApiException(Throwable exception, ApiErrorCode errorCode) {
+        super(exception);
+        this.httpStatus = errorCode.getHttpStatus();
+        this.message = errorCode.getMessage();
+    }
     public ApiException(Exception exception, ApiErrorCode errorCode) {
         super(exception);
         this.httpStatus = errorCode.getHttpStatus();
