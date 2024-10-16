@@ -2,7 +2,7 @@ package me.jisung.springplayground.common.util;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jisung.springplayground.common.exception.ApiErrorCode;
+import me.jisung.springplayground.common.exception.Api5xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
@@ -34,10 +34,10 @@ public class WebClientUtil {
                 .uri(uri)
                 .headers(headers)
                 .exchangeToMono(res -> res.bodyToMono(String.class))
-                .onErrorResume(err -> Mono.error(new ApiException(err, ApiErrorCode.SERVICE_UNAVAILABLE)))
+                .onErrorResume(err -> Mono.error(new ApiException(err, Api5xxErrorCode.SERVICE_UNAVAILABLE)))
                 .block();
 
-        if(Objects.isNull(response)) throw new ApiException(ApiErrorCode.SERVICE_UNAVAILABLE);
+        if(Objects.isNull(response)) throw new ApiException(Api5xxErrorCode.SERVICE_UNAVAILABLE);
         log.info("[RESPONSE GET] response: {}", response);
         return response;
     }

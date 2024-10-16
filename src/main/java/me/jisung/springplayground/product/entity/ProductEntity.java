@@ -10,7 +10,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import me.jisung.springplayground.BaseEntity;
+import me.jisung.springplayground.common.BaseEntity;
 import me.jisung.springplayground.common.annotation.ExcelColumn;
 
 @Entity
