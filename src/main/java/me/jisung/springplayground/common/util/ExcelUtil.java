@@ -11,7 +11,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import me.jisung.springplayground.common.exception.ApiErrorCode;
+import me.jisung.springplayground.common.exception.Api4xxErrorCode;
+import me.jisung.springplayground.common.exception.Api5xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
@@ -26,7 +27,6 @@ import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.http.HttpStatus;
 
 public class ExcelUtil {
 
@@ -49,7 +49,7 @@ public class ExcelUtil {
      * @param sheetName 엑셀 시트 이름
      */
     public static void listToExcel(List<?> list, Class<?> clazz, HttpServletResponse response, String filename, String sheetName) {
-        if(list.size() >= MAX_ROW_COUNT) throw new ApiException(HttpStatus.BAD_REQUEST, "row length is too long - max row cnt: " + MAX_ROW_COUNT);
+        if(list.size() >= MAX_ROW_COUNT) throw new ApiException(Api4xxErrorCode.INVALID_REQUEST_BODY, "row length is too long - max row cnt: " + MAX_ROW_COUNT);
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet(sheetName);
@@ -102,7 +102,7 @@ public class ExcelUtil {
             workbook.close();
             out.close();
         } catch (IllegalAccessException | IOException e) {
-            throw new ApiException(e, ApiErrorCode.UNAUTHORIZED);
+            throw new ApiException(e, Api5xxErrorCode.SERVICE_UNAVAILABLE);
         }
     }
 
@@ -116,7 +116,7 @@ public class ExcelUtil {
                 .filter(field -> field.isAnnotationPresent(ExcelColumn.class))
                 .toList();
 
-        if(fieldList.isEmpty()) throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE, "[" + clazz.getName() + "] Can't find field with @ExcelColumn annotation");
+        if(fieldList.isEmpty()) throw new ApiException(Api5xxErrorCode.SERVICE_UNAVAILABLE, "[" + clazz.getName() + "] can not find field with @ExcelColumn annotation");
 
         for (Field field : fieldList) field.setAccessible(true);
 

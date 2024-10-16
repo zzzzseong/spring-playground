@@ -27,12 +27,12 @@ public class ApiExceptionHandler {
     @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
     public String validationExceptionHandler(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        ApiException apiException = new ApiException(ApiErrorCode.INVALID_REQUEST_BODY, message);
+        ApiException apiException = new ApiException(Api4xxErrorCode.INVALID_REQUEST_BODY, message);
         return apiExceptionHandler(apiException);
     }
 
     @ExceptionHandler(Exception.class)
     public String unhandledExceptionHandler(Exception e) {
-        return apiExceptionHandler(new ApiException(e, ApiErrorCode.UNHANDLED_EXCEPTION));
+        return apiExceptionHandler(new ApiException(e, Api5xxErrorCode.UNHANDLED_EXCEPTION));
     }
 }
