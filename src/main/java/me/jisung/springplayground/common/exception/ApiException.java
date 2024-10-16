@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public class ApiException extends RuntimeException {
     private final HttpStatus httpStatus;
+    private final String code;
     private final String message;
 
     /**
@@ -16,21 +17,31 @@ public class ApiException extends RuntimeException {
     public ApiException(Throwable exception, ApiErrorCode errorCode) {
         super(exception);
         this.httpStatus = errorCode.getHttpStatus();
+        this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
     }
     public ApiException(Exception exception, ApiErrorCode errorCode) {
         super(exception);
         this.httpStatus = errorCode.getHttpStatus();
+        this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
     }
     public ApiException(ApiErrorCode errorCode) {
         super(errorCode.getMessage());
         this.httpStatus = errorCode.getHttpStatus();
+        this.code = errorCode.getCode();
         this.message = errorCode.getMessage();
     }
-    public ApiException(HttpStatus status, String message) {
+    public ApiException(ApiErrorCode errorCode, String message) {
+        super(errorCode.getMessage());
+        this.httpStatus = errorCode.getHttpStatus();
+        this.code = errorCode.getCode();
+        this.message = message;
+    }
+    public ApiException(HttpStatus status, String code, String message) {
         super(message);
         this.httpStatus = status;
+        this.code = code;
         this.message = message;
     }
 }
