@@ -17,7 +17,7 @@ public class ApiResponseUtil {
         return success(null);
     }
     public static <T> String success(T data) {
-        return JsonUtil.toJson(ApiResponse.builder()
+        return JsonUtil.toNonEscapeJson(ApiResponse.builder()
                 .result(RESPONSE_RESULT_SUCCESS)
                 .code(ApiConstant.RESPONSE_CODE_SUCCESS)
                 .data(data)
@@ -26,7 +26,7 @@ public class ApiResponseUtil {
     }
 
     public static <T> String fail(String code, T data) {
-        return JsonUtil.toJson(ApiResponse.builder()
+        return JsonUtil.toNonEscapeJson(ApiResponse.builder()
                 .result(RESPONSE_RESULT_FAIL)
                 .code(code)
                 .data(data)
