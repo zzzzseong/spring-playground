@@ -3,14 +3,13 @@ package me.jisung.springplayground.common.util;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import java.awt.Color;
-import me.jisung.springplayground.common.annotation.ExcelColumn;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
+import me.jisung.springplayground.common.annotation.ExcelColumn;
 import me.jisung.springplayground.common.exception.Api4xxErrorCode;
 import me.jisung.springplayground.common.exception.Api5xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
@@ -107,7 +106,7 @@ public class ExcelUtil {
     }
 
     public static String makeFilename(String subject) {
-        SimpleDateFormat now = new SimpleDateFormat(DateUtil.DATE_FORMAT);
+        SimpleDateFormat now = new SimpleDateFormat(DateUtil.DATE_TIME_FORMAT);
         return subject + "-" + now.format(new Date()) + ".xlsx";
     }
 

@@ -14,11 +14,12 @@ import me.jisung.springplayground.common.annotation.ExcelColumn;
 
 
 @Builder
-@AllArgsConstructor
 @Entity(name="product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductEntity extends BaseEntity {
 
+    @Column(name = "id")
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
