@@ -19,10 +19,9 @@ import java.util.Objects;
 
 @Aspect
 @Component
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Slf4j(topic = "ControllerLogAop")
-public class HttpLogAop {
+public class ApiLogAop {
 
     @Pointcut("execution(* me.jisung.springplayground..controller..*(..))")
     public void controller() {}
@@ -32,7 +31,6 @@ public class HttpLogAop {
      * @see me.jisung.springplayground.common.exception.ApiExceptionHandler
      * - [RESPONSE FAIL]에 대한 로깅은 해당 클래스에서 처리
      */
-    @Transactional
     @Around("controller()")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = this.getHttpServletRequest();
@@ -40,24 +38,19 @@ public class HttpLogAop {
         String uri = request.getRequestURI();
         String body = getBodyString(joinPoint);
 
-        log.info("[REQUEST SUCCESS] class: {}, method: {}, uri: {}, body: {}", getClassName(joinPoint), method, uri, body);
+        log.info("[API REQUEST SUCCESS] method: {}, uri: {}, body: {}", method, uri, body);
 
         Object result = null;
         try {
             result = joinPoint.proceed();
             return result;
         } finally {
-            if (!Objects.isNull(result)) log.info("[RESPONSE SUCCESS]: {}", result);
+            if (!Objects.isNull(result)) log.info("[API RESPONSE SUCCESS]: {}", result);
         }
     }
 
     private HttpServletRequest getHttpServletRequest() {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    }
-
-    private String getClassName(ProceedingJoinPoint joinPoint) {
-        String classPath = joinPoint.getSignature().getDeclaringTypeName();
-        return classPath.substring(classPath.lastIndexOf(".") + 1);
     }
 
     private String getBodyString(ProceedingJoinPoint joinPoint) {
