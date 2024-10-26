@@ -9,8 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.annotation.ExcelColumn;
-import me.jisung.springplayground.common.exception.Api4xxErrorCode;
 import me.jisung.springplayground.common.exception.Api5xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
 import org.apache.poi.ss.usermodel.BorderStyle;
@@ -27,9 +27,10 @@ import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFColor;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+@Slf4j(topic = "ExcelUtil")
 public class ExcelUtil {
 
-    private static final int MAX_ROW_COUNT = 1_000_000;
+    private static final int MAX_ROW_SIZE = 1_000_000;
 
     private static final Color HEADER_COLOR = new Color(20, 171, 177);
     private static final short HEADER_HEIGHT = 500;
@@ -48,7 +49,11 @@ public class ExcelUtil {
      * @param sheetName 엑셀 시트 이름
      */
     public static void listToExcel(List<?> list, Class<?> clazz, HttpServletResponse response, String filename, String sheetName) {
-        if(list.size() >= MAX_ROW_COUNT) throw new ApiException(Api4xxErrorCode.INVALID_REQUEST_BODY, "row length is too long - max row cnt: " + MAX_ROW_COUNT);
+        if(list.size() >= MAX_ROW_SIZE) {
+            log.error("row size is too big. current row size: {}", list.size());
+            log.error("adjusting size automatically. max row size: {}", MAX_ROW_SIZE);
+            list = list.subList(0, MAX_ROW_SIZE);
+        }
 
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet(sheetName);
@@ -115,7 +120,15 @@ public class ExcelUtil {
                 .filter(field -> field.isAnnotationPresent(ExcelColumn.class))
                 .toList();
 
-        if(fieldList.isEmpty()) throw new ApiException(Api5xxErrorCode.SERVICE_UNAVAILABLE, "[" + clazz.getName() + "] can not find field with @ExcelColumn annotation");
+        /* 엑셀 추출 대상 클래스에서 @ExcelColumn을 찾을 수 없는 경우 */
+        if(fieldList.isEmpty()) {
+            Api5xxErrorCode errorCode = Api5xxErrorCode.SERVICE_UNAVAILABLE;
+            throw ApiException.builder()
+                .httpStatus(errorCode.getHttpStatus())
+                .code(errorCode.getCode())
+                .message("[" + clazz.getName() + "] can't find field with @ExcelColumn annotation")
+                .build();
+        }
 
         for (Field field : fieldList) field.setAccessible(true);
 

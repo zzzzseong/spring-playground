@@ -1,5 +1,6 @@
 package me.jisung.springplayground.common.exception;
 
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -9,34 +10,19 @@ public class ApiException extends RuntimeException {
     private final String code;
     private final String message;
 
-    /**
-     * ApiException Constructor
-     * @param exception: 스택 정보와 메시지, 컨텍스트 정보 등을 전달하기 위해 기존에 발생했던 예외를 전달받아 상위 클래스에 전달한다.
-     * @param errorCode: ApiException 처리를 위해 미리 정의해둔 enum 코드
-     * */
-    public ApiException(Throwable exception, ApiErrorCode errorCode) {
-        super(exception);
-        this.httpStatus = errorCode.getHttpStatus();
-        this.code = errorCode.getCode();
-        this.message = errorCode.getMessage();
-    }
-    public ApiException(Exception exception, ApiErrorCode errorCode) {
-        super(exception);
-        this.httpStatus = errorCode.getHttpStatus();
-        this.code = errorCode.getCode();
-        this.message = errorCode.getMessage();
-    }
-    public ApiException(ApiErrorCode errorCode) {
-        super(errorCode.getMessage());
-        this.httpStatus = errorCode.getHttpStatus();
-        this.code = errorCode.getCode();
-        this.message = errorCode.getMessage();
-    }
-    public ApiException(ApiErrorCode errorCode, String message) {
-        super(errorCode.getMessage());
-        this.httpStatus = errorCode.getHttpStatus();
-        this.code = errorCode.getCode();
+    @Builder
+    public ApiException(Throwable e, HttpStatus httpStatus, String code, String message) {
+        super(e);
+        this.httpStatus = httpStatus;
+        this.code = code;
         this.message = message;
+    }
+
+    public ApiException(Throwable e, ApiErrorCode errorCode) {
+        super(e);
+        this.httpStatus = errorCode.getHttpStatus();
+        this.code = errorCode.getCode();
+        this.message = errorCode.getMessage();
     }
     public ApiException(HttpStatus status, String code, String message) {
         super(message);
