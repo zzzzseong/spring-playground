@@ -1,26 +1,21 @@
-package me.jisung.springplayground.common;
+package me.jisung.springplayground.common.entity;
 
-import com.google.gson.annotations.Expose;
-import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import lombok.Getter;
 import me.jisung.springplayground.common.util.DateUtil;
 
+import java.io.Serializable;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Getter
 @MappedSuperclass
-public abstract class BaseEntity {
+public abstract class BaseEntity implements Serializable {
 
-    @Expose
-    @Column(name = "created_at")
     private String createdAt;
-
-    @Expose
-    @Column(name = "updated_at")
     private String updatedAt;
 
     @PrePersist

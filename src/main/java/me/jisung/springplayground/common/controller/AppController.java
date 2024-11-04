@@ -1,8 +1,7 @@
 package me.jisung.springplayground.common.controller;
 
-import static me.jisung.springplayground.common.util.ApiResponseUtil.success;
-
 import lombok.extern.slf4j.Slf4j;
+import me.jisung.springplayground.common.json.ApiResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AppController {
 
     @GetMapping("/health")
-    public String health() {
-        return success();
+    public ApiResponse<Void> health() {
+        return ApiResponse.success();
     }
 }
