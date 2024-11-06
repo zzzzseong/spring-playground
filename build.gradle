@@ -19,32 +19,37 @@ repositories {
 
 dependencies {
     /* spring */
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-aop'
-    implementation 'org.springframework.kafka:spring-kafka'
+    implementation          'org.springframework.boot:spring-boot-starter'
+    implementation          'org.springframework.boot:spring-boot-starter-web'
+    implementation          'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation          'org.springframework.boot:spring-boot-starter-validation'
+    implementation          'org.springframework.boot:spring-boot-starter-webflux'
+    implementation          'org.springframework.boot:spring-boot-starter-security'
+    implementation          'org.springframework.boot:spring-boot-starter-aop'
+    implementation          'org.springframework.kafka:spring-kafka'
 
     /* database */
-    implementation 'com.mysql:mysql-connector-j'
+    implementation          'com.mysql:mysql-connector-j'
 
     /* lombok */
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
+    compileOnly             'org.projectlombok:lombok'
+    annotationProcessor     'org.projectlombok:lombok'
+
+    /* jwt */
+    implementation          'io.jsonwebtoken:jjwt-api:0.12.6'
+    implementation          'io.jsonwebtoken:jjwt-impl:0.12.6'
+    implementation          'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
     /* excel */
-    implementation 'org.apache.poi:poi:5.3.0'
-    implementation 'org.apache.poi:poi-ooxml:5.3.0'
+    implementation          'org.apache.poi:poi:5.3.0'
+    implementation          'org.apache.poi:poi-ooxml:5.3.0'
 
     /* json */
-    implementation 'com.google.code.gson:gson'
+    implementation          'com.google.code.gson:gson'
 
     /* test */
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation      'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly         'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {

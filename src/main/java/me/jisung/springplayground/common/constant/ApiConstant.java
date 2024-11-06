@@ -8,7 +8,6 @@ public class ApiConstant {
     public static final String RESPONSE_RESULT_FAIL = "fail";
 
     public static final String RESPONSE_CODE_SUCCESS = "S20000";
-    public static final String BEARER_PREFIX = "Bearer ";
 
     /* validation */
     public static final String NOT_NULL_MESSAGE = "필수 입력값이 누락되었습니다.";

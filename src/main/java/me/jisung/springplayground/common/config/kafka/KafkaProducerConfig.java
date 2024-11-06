@@ -17,6 +17,8 @@ public class KafkaProducerConfig {
     @Value("${kafka_bootstrap_servers}")
     private String bootstrapServers;
 
+    private final String[] acks = {"0", "1", "all"};
+
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(kafkaProducerFactory());
@@ -39,7 +41,7 @@ public class KafkaProducerConfig {
         /* props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID());*/
 
         // producer acknowledge setting
-        props.put(ProducerConfig.ACKS_CONFIG, "1");
+        props.put(ProducerConfig.ACKS_CONFIG, acks[1]);
 
         // register custom partitioner
         /* props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG, CustomPartitioner.class);*/
