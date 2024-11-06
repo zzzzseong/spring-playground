@@ -1,7 +1,7 @@
 package me.jisung.springplayground.common.controller;
 
 import lombok.extern.slf4j.Slf4j;
-import me.jisung.springplayground.common.json.ApiResponse;
+import me.jisung.springplayground.common.entity.ApiResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
