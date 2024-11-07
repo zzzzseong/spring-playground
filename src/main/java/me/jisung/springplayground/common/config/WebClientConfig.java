@@ -4,105 +4,61 @@ import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
-import org.springframework.http.codec.LoggingCodecSupport;
-import org.springframework.web.reactive.function.client.*;
-import reactor.core.publisher.Mono;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
+import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
 import java.time.Duration;
-
 
 @Configuration
 @Slf4j(topic = "WebClientConfig")
 public class WebClientConfig {
 
-    @Value("${webclient.connection.timeoutMillis:10000}")
-    private int connectionTimeoutMillis;
+    /* 서버 연결 시도 시 타임아웃 설정 - 5s */
+    private static final int CONNECTION_TIMEOUT_MILLIS = 5000;
 
-    @Value("${webclient.read.timeoutSeconds:10}")
-    private int readTimeoutSeconds;
+    /* 서버로부터 응답 데이터를 읽는 데 걸리는 시간에 대한 타임아웃 설정 - 10s */
+    private static final int READ_TIMEOUT_SECONDS = 10;
 
-    @Value("${webclient.write.timeoutSeconds:10}")
-    private int writeTimeoutSeconds;
+    /* 서버로 요청 데이터를 쓰는 데 걸리는 시간에 대한 타임아웃 설정 - 10s */
+    private static final int WRITE_TIMEOUT_SECONDS = 10;
 
-    @Value("${webclient.response.timeoutSeconds:5}")
-    private int responseTimeoutSeconds;
+    /* HTTP 요청을 보낸 시점부터 응답을 받기까지에 대한 전체 시간 타임아웃 설정 - 5s */
+    private static final int RESPONSE_TIMEOUT_SECONDS = 5;
 
-    @Value("${webclient.maxInMemorySize:52428800}") // 50MB
-    private int maxInMemorySize;
+    /* 요청, 응답에서 허용하는 최대 버퍼 크기 설정 - 2MB */
+    private static final int MAX_IN_MEMORY_SIZE = 2 * 1024 * 1024;
+
+    /* 동일한 IP 주소에 대해 HTTP 커넥션 재사용 여부 설정 */
+    private static final boolean KEEP_ALIVE = true;
 
 
     @Bean
     public WebClient webClient(){
-        // MaxInMemorySize
-        // ExchangeStrategies: 응답의 최대 메모리 크기를 50MB로 설정
         ExchangeStrategies exchangeStrategies = ExchangeStrategies.builder()
-                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(maxInMemorySize))
+                .codecs(configurer -> configurer.defaultCodecs().maxInMemorySize(MAX_IN_MEMORY_SIZE))
                 .build();
 
-        //Logging
-        //개발 진행 시 Request/Response 정보를 상세히 확인하기 위해서
-        exchangeStrategies
-                .messageWriters().stream()
-                .filter(LoggingCodecSupport.class::isInstance)
-                .forEach(writer -> ((LoggingCodecSupport) writer).setEnableLoggingRequestDetails(true));
-
-        // Request header 출력필터
-        ExchangeFilterFunction requestFilter = ExchangeFilterFunction
-                .ofRequestProcessor(this::exchangeFilterRequestProcessor);
-
-        // Response header 출력필터
-        ExchangeFilterFunction responseFilter = ExchangeFilterFunction
-                .ofResponseProcessor(this::exchangeFilterResponseProcessor);
-
-
         return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(httpClient())) // HTTP 클라이언트 라이브러리 세팅
+                .clientConnector(new ReactorClientHttpConnector(httpClient()))
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .exchangeStrategies(exchangeStrategies)
-                .filter(requestFilter)
-                .filter(responseFilter)
-                // 기본 헤더값.
-                .defaultHeader(HttpHeaders.CONTENT_TYPE,"application/x-www-form-urlencoded; charset=UTF-8")
-                .build()
-                ;
+                .build();
     }
 
     private HttpClient httpClient(){
-        return HttpClient
-                .create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, connectionTimeoutMillis) // connection timeout
+        return HttpClient.create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, CONNECTION_TIMEOUT_MILLIS)
                 .doOnConnected(conn -> conn
-                        .addHandlerLast(new ReadTimeoutHandler(readTimeoutSeconds)) //read timeout
-                        .addHandlerLast(new WriteTimeoutHandler(writeTimeoutSeconds)) // write timeout
+                        .addHandlerLast(new ReadTimeoutHandler(READ_TIMEOUT_SECONDS))
+                        .addHandlerLast(new WriteTimeoutHandler(WRITE_TIMEOUT_SECONDS))
                 )
-                .responseTimeout(Duration.ofSeconds(responseTimeoutSeconds)) // response timeout for all requests
-                .keepAlive(false) // 커넥션 재사용 금지
-                ;
-    }
-
-    private Mono<ClientResponse> exchangeFilterResponseProcessor(ClientResponse clientResponse) {
-        if (log.isDebugEnabled()) {
-            log.debug("Response: {}, {}", clientResponse.statusCode(), clientResponse.bodyToMono(String.class));
-            clientResponse.headers()
-                    .asHttpHeaders()
-                    .forEach((name, values) ->
-                            values.forEach(value -> log.debug("{} : {}", name, value)));
-        }
-        return Mono.just(clientResponse);
-    }
-
-    private Mono<ClientRequest> exchangeFilterRequestProcessor(ClientRequest clientRequest) {
-        if (log.isDebugEnabled()) {
-            log.debug("Request: {} {}", clientRequest.method(), clientRequest.url());
-            clientRequest.headers()
-                    .forEach((name, values) ->
-                            values.forEach(value -> log.debug("{} : {}", name, value)));
-        }
-        return Mono.just(clientRequest);
+                .responseTimeout(Duration.ofSeconds(RESPONSE_TIMEOUT_SECONDS))
+                .keepAlive(KEEP_ALIVE);
     }
 }
