@@ -10,7 +10,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -45,7 +44,7 @@ public class ApiLogAop {
             result = joinPoint.proceed();
             return result;
         } finally {
-            if (!Objects.isNull(result)) log.info("[API RESPONSE SUCCESS]: {}", result);
+            if (!Objects.isNull(result)) log.info("[API RESPONSE SUCCESS]: {}", JsonUtil.toJson(result));
         }
     }
 

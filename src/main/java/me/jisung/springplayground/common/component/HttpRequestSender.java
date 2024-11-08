@@ -1,11 +1,7 @@
 package me.jisung.springplayground.common.component;
 
-import java.net.URI;
-import java.util.Objects;
-import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jisung.springplayground.common.util.JsonUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -15,8 +11,13 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
+
+import java.net.URI;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
@@ -25,23 +26,29 @@ public class HttpRequestSender {
 
     private final WebClient webClient;
 
-    public static final String DEFAULT_BODY_VALUE = "{}";
     public static final Consumer<HttpHeaders> emptyHeaders = httpHeaders -> {};
 
-    public String post(URI uri, Consumer<HttpHeaders> headers, Object body) throws HttpStatusCodeException {
-        String bodyValue = Objects.isNull(body) ? DEFAULT_BODY_VALUE : JsonUtil.toJson(body);
-        log.info("[POST REQ] uri: {}, headers: {}, body: {}", uri, this.getHttpHeaders(headers), bodyValue);
+    public String post(URI uri) throws HttpStatusCodeException {
+        return this.post(uri, emptyHeaders, null);
+    }
+    public String post(URI uri, Consumer<HttpHeaders> headers) throws HttpStatusCodeException {
+        return this.post(uri, headers, null);
+    }
+    public String post(URI uri, Consumer<HttpHeaders> headers, Object body) throws WebClientException {
+        log.info("[POST REQ] uri: {}, headers: {}, body: {}", uri, this.getHttpHeaders(headers), body);
 
-        String response = webClient
-            .post()
-            .uri(uri)
-            .headers(headers)
-            .bodyValue(bodyValue)
-            .retrieve()
-            .onStatus(HttpStatusCode::is4xxClientError, err -> Mono.error(new HttpClientErrorException(err.statusCode())))
-            .onStatus(HttpStatusCode::is5xxServerError, err -> Mono.error(new HttpServerErrorException(err.statusCode())))
-            .bodyToMono(String.class)
-            .block();
+        WebClient.RequestBodySpec bodySpec = webClient
+                .post()
+                .uri(uri)
+                .headers(headers);
+
+        if(!Objects.isNull(body)) bodySpec.bodyValue(body);
+
+        String response = bodySpec.retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, err -> Mono.error(new HttpClientErrorException(err.statusCode())))
+                .onStatus(HttpStatusCode::is5xxServerError, err -> Mono.error(new HttpServerErrorException(err.statusCode())))
+                .bodyToMono(String.class)
+                .block();
 
         if(Objects.isNull(response)) throw new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE);
         log.info("[POST RES] response: {}", response);
@@ -77,6 +84,15 @@ public class HttpRequestSender {
         return UriComponentsBuilder.newInstance()
                 .scheme(scheme)
                 .host(host)
+                .path(path)
+                .build()
+                .toUri();
+    }
+    public URI buildUri(String scheme, String host, int port, String path) {
+        return UriComponentsBuilder.newInstance()
+                .scheme(scheme)
+                .host(host)
+                .port(port)
                 .path(path)
                 .build()
                 .toUri();
