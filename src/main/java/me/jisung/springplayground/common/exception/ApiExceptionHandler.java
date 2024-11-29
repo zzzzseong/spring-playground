@@ -1,13 +1,14 @@
 package me.jisung.springplayground.common.exception;
 
-import java.net.BindException;
-import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.entity.ApiResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.net.BindException;
+import java.util.Objects;
 
 @RestControllerAdvice
 @Slf4j(topic = "ApiExceptionHandler")
@@ -32,7 +33,7 @@ public class ApiExceptionHandler {
             .code(errorCode.getCode())
             .message(e.getMessage())
             .build();
-        return apiExceptionHandler(apiException);
+        return this.apiExceptionHandler(apiException);
     }
 
     /**
@@ -48,7 +49,7 @@ public class ApiExceptionHandler {
             .message(e.getMessage())
             .build();
 
-        return apiExceptionHandler(apiException);
+        return this.apiExceptionHandler(apiException);
     }
 
     /**
@@ -64,6 +65,6 @@ public class ApiExceptionHandler {
             .message(e.getBindingResult().getAllErrors().get(0).getDefaultMessage())
             .build();
 
-        return apiExceptionHandler(apiException);
+        return this.apiExceptionHandler(apiException);
     }
 }
