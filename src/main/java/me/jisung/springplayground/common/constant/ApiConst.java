@@ -1,13 +1,17 @@
 package me.jisung.springplayground.common.constant;
 
-public class ApiConstant {
+public class ApiConst {
 
-    private ApiConstant() {}
+    private ApiConst() {}
 
     public static final String RESPONSE_RESULT_SUCCESS = "success";
     public static final String RESPONSE_RESULT_FAIL = "fail";
 
     public static final String RESPONSE_CODE_SUCCESS = "S20000";
+
+    /* pagination */
+    public static final int DEFAULT_PAGE_NUMBER     = 1;
+    public static final int DEFAULT_PAGE_SIZE       = 10;
 
     /* validation */
     public static final String NOT_NULL_MESSAGE = "필수 입력값이 누락되었습니다.";

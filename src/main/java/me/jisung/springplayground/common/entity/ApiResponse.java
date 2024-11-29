@@ -1,13 +1,11 @@
 package me.jisung.springplayground.common.entity;
 
-import static me.jisung.springplayground.common.constant.ApiConstant.RESPONSE_CODE_SUCCESS;
-import static me.jisung.springplayground.common.constant.ApiConstant.RESPONSE_RESULT_FAIL;
-import static me.jisung.springplayground.common.constant.ApiConstant.RESPONSE_RESULT_SUCCESS;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import static me.jisung.springplayground.common.constant.ApiConst.*;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
