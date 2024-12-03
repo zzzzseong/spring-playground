@@ -21,15 +21,14 @@ import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
-@Slf4j(topic = "WebClientUtil")
-public class HttpRequestSender {
+@Slf4j(topic = "HttpComponent")
+public class HttpComponent {
 
     private final WebClient webClient;
-
-    public static final Consumer<HttpHeaders> emptyHeaders = httpHeaders -> {};
+    private final Consumer<HttpHeaders> emptyHeaders = httpHeaders -> {};
 
     public String post(URI uri) throws HttpStatusCodeException {
-        return this.post(uri, emptyHeaders, null);
+        return this.post(uri, this.emptyHeaders, null);
     }
     public String post(URI uri, Consumer<HttpHeaders> headers) throws HttpStatusCodeException {
         return this.post(uri, headers, null);
@@ -55,6 +54,9 @@ public class HttpRequestSender {
         return response;
     }
 
+    public String get(URI uri) throws HttpStatusCodeException {
+        return this.get(uri, this.emptyHeaders);
+    }
     public String get(URI uri, Consumer<HttpHeaders> headers) throws HttpStatusCodeException {
         log.info("[GET REQ] uri: {}, headers: {}", uri, this.getHttpHeaders(headers));
 

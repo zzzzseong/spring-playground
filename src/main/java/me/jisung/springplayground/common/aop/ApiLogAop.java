@@ -16,6 +16,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Objects;
 
+/**
+ * validation -> aop -> controller -> exception throws -> aop -> exception handler
+ * */
 @Aspect
 @Component
 @RequiredArgsConstructor

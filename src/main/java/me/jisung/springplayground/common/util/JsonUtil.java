@@ -8,7 +8,7 @@ public class JsonUtil {
     private static final Gson gson = new Gson();
     private static final Gson nonEscapeGson = new GsonBuilder().disableHtmlEscaping().create();
 
-    private JsonUtil() { throw new IllegalArgumentException("utility class cannot be instantiated"); }
+    private JsonUtil() {}
 
     public static String toJson(Object object) {
         return gson.toJson(object);

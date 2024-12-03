@@ -2,6 +2,16 @@ package me.jisung.springplayground.common.util;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import me.jisung.springplayground.common.annotation.ExcelColumn;
+import me.jisung.springplayground.common.exception.Api5xxErrorCode;
+import me.jisung.springplayground.common.exception.ApiException;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFColor;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import java.awt.Color;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -9,23 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import lombok.extern.slf4j.Slf4j;
-import me.jisung.springplayground.common.annotation.ExcelColumn;
-import me.jisung.springplayground.common.exception.Api5xxErrorCode;
-import me.jisung.springplayground.common.exception.ApiException;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.DefaultIndexedColorMap;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFColor;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 @Slf4j(topic = "ExcelUtil")
 public class ExcelUtil {
@@ -36,9 +29,7 @@ public class ExcelUtil {
     private static final short HEADER_HEIGHT = 500;
     private static final int HEADER_WIDTH = 5000;
 
-    private ExcelUtil() {
-        throw new IllegalStateException("Utility class cannot be instantiated");
-    }
+    private ExcelUtil() {}
 
     /**
      * 리스트에 담긴 데이터를 POI Workbook 객체로 변환해 반환하는 메서드

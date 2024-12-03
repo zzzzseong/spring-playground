@@ -36,7 +36,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         try {
             String bearerToken = request.getHeader(SecurityConstant.AUTHORIZATION_HEADER);
 
-            if(!StringUtil.isEmptyString(bearerToken)) {
+            if(!StringUtil.isEmpty(bearerToken)) {
                 String accessToken = jwtProvider.getAccessToken(bearerToken);
                 setAuthentication(jwtProvider.getEmail(accessToken));
             }

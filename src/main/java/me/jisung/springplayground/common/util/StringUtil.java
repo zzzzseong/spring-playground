@@ -4,9 +4,19 @@ import java.util.Objects;
 
 public class StringUtil {
 
-    private StringUtil() { throw new IllegalStateException("util class cannot be instantiated"); }
+    private static final String NULL = "null";
 
-    public static boolean isEmptyString(String str) {
-        return Objects.isNull(str) || str.isEmpty() || Objects.equals("null", str);
+    private StringUtil() {}
+
+    public static boolean isEmpty(String value) {
+        return Objects.isNull(value) || value.isEmpty() || Objects.equals(NULL, value);
+    }
+
+    public static String getOrDefault(String value, String defaultValue) {
+        return isEmpty(value) ? defaultValue : value;
+    }
+
+    public static String ifNull(String target, String defaultValue, String nonNullValue) {
+        return Objects.isNull(target) ? defaultValue : nonNullValue;
     }
 }
