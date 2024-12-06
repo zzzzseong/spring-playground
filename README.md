@@ -2,7 +2,7 @@
 
 ---
 
-## Profile Setting
+# Profile Setting
 
 ---
 
@@ -30,3 +30,10 @@ spring.datasource.url=jdbc:mysql://localhost:3306/spring_playground
 spring.datasource.username=root
 spring.datasource.password=1234
 ```
+
+# Build
+```bash
+./gradlew clean build ${options}
+```
+- -Dorg.gradle.java.home=${java_home}:  특정 JDK 버전으로 빌드
+- -Dspring.profiles.active=${profile}: 특정 프로파일로 빌드
