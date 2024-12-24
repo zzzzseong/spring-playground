@@ -2,6 +2,8 @@ package me.jisung.springplayground.common.util;
 
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.annotation.ExcelColumn;
 import me.jisung.springplayground.common.exception.Api5xxErrorCode;
@@ -21,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 
 @Slf4j(topic = "ExcelUtil")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExcelUtil {
 
     private static final int MAX_ROW_SIZE = 1_000_000;
@@ -28,8 +31,6 @@ public class ExcelUtil {
     private static final Color HEADER_COLOR = new Color(20, 171, 177);
     private static final short HEADER_HEIGHT = 500;
     private static final int HEADER_WIDTH = 5000;
-
-    private ExcelUtil() {}
 
     /**
      * 리스트에 담긴 데이터를 POI Workbook 객체로 변환해 반환하는 메서드

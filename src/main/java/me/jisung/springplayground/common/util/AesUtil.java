@@ -1,5 +1,7 @@
 package me.jisung.springplayground.common.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.*;
@@ -12,9 +14,10 @@ import java.util.Base64;
 
 /**
  * AES(Advanced Encryption Standard) Utility Class
- * support AES-128(16byte key), AES-192(24byte key), AES-256(32byte key)
+ * <br> block-size supports AES-128(16byte key), AES-192(24byte key), AES-256(32byte key)
  * */
 @Slf4j(topic = "AesUtil")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AesUtil {
 
     private static final int BLOCK_SIZE_BYTE = 32;
@@ -23,7 +26,6 @@ public class AesUtil {
     private static final String ALGORITHM_AES_CBC_PKCS5 = "AES/CBC/PKCS5Padding";
     private static final String ALGORITHM_AES = "AES";
 
-    private AesUtil() {}
 
     /**
      * Encrypts the value using the given key.

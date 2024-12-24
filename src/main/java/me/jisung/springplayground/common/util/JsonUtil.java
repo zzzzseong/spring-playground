@@ -2,13 +2,15 @@ package me.jisung.springplayground.common.util;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JsonUtil {
 
     private static final Gson gson = new Gson();
     private static final Gson nonEscapeGson = new GsonBuilder().disableHtmlEscaping().create();
 
-    private JsonUtil() {}
 
     public static String toJson(Object object) {
         return gson.toJson(object);
