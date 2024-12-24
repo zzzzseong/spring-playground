@@ -36,9 +36,9 @@ public class ApiLogAop {
     @Around("controller()")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = this.getHttpServletRequest();
-        String method = request.getMethod();
-        String uri = request.getRequestURI();
-        String body = getBodyString(joinPoint);
+        String method   = request.getMethod();
+        String uri      = request.getRequestURI();
+        String body     = getBodyString(joinPoint);
 
         log.info("[API REQUEST SUCCESS] method: {}, uri: {}, body: {}", method, uri, body);
 
