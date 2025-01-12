@@ -4,6 +4,7 @@ import jakarta.persistence.MappedSuperclass;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 import lombok.Getter;
 import me.jisung.springplayground.common.util.DateUtil;
 
@@ -11,12 +12,12 @@ import me.jisung.springplayground.common.util.DateUtil;
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
 
-    private String createdAt;
-    private String updatedAt;
+    private ZonedDateTime createdAt;
+    private ZonedDateTime updatedAt;
 
     @PrePersist
     public void prePersist() {
-        String now = DateUtil.now();
+        ZonedDateTime now = DateUtil.now();
         this.createdAt = now;
         this.updatedAt = now;
     }

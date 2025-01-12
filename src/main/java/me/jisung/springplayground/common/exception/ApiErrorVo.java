@@ -10,6 +10,6 @@ public class ApiErrorVo {
 
     public ApiErrorVo(String message) {
         this.message = message;
-        this.timestamp = DateUtil.now();
+        this.timestamp = DateUtil.now(DateUtil.DATE_TIME_FORMAT);
     }
 }

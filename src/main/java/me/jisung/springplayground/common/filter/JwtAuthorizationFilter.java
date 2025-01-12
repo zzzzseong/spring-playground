@@ -1,11 +1,12 @@
-package me.jisung.springplayground.common.component;
+package me.jisung.springplayground.common.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.jisung.springplayground.common.constant.SecurityConstant;
+import me.jisung.springplayground.common.component.JwtProvider;
+import me.jisung.springplayground.common.constant.SecurityConst;
 import me.jisung.springplayground.common.exception.Api4xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
 import me.jisung.springplayground.common.util.StringUtil;
@@ -34,7 +35,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         @NonNull FilterChain filterChain
     ) {
         try {
-            String bearerToken = request.getHeader(SecurityConstant.AUTHORIZATION_HEADER);
+            String bearerToken = request.getHeader(SecurityConst.AUTHORIZATION_HEADER);
 
             if(!StringUtil.isEmpty(bearerToken)) {
                 String accessToken = jwtProvider.getAccessToken(bearerToken);

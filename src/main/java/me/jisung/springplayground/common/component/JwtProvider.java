@@ -6,7 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.util.Date;
 import javax.crypto.SecretKey;
-import me.jisung.springplayground.common.constant.SecurityConstant;
+import me.jisung.springplayground.common.constant.SecurityConst;
 import me.jisung.springplayground.common.exception.Api4xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,15 +41,15 @@ public class JwtProvider {
             .expiration(new Date(now.getTime() + accessTokenExp))
             .compact();
 
-        return SecurityConstant.BEARER_PREFIX + accessToken;
+        return SecurityConst.BEARER_PREFIX + accessToken;
     }
 
     public String getAccessToken(String bearerToken) {
-        if(!bearerToken.startsWith(SecurityConstant.BEARER_PREFIX)) {
+        if(!bearerToken.startsWith(SecurityConst.BEARER_PREFIX)) {
             throw new ApiException(Api4xxErrorCode.INVALID_AUTHORIZATION_HEADER);
         }
 
-        String accessToken = bearerToken.substring(SecurityConstant.BEARER_PREFIX.length());
+        String accessToken = bearerToken.substring(SecurityConst.BEARER_PREFIX.length());
         validateToken(accessToken);
 
         return accessToken;

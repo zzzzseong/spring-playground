@@ -1,7 +1,7 @@
 package me.jisung.springplayground.common.config;
 
 import lombok.RequiredArgsConstructor;
-import me.jisung.springplayground.common.component.JwtAuthorizationFilter;
+import me.jisung.springplayground.common.filter.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

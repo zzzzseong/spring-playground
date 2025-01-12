@@ -17,11 +17,14 @@ public enum Api4xxErrorCode implements ApiErrorCode{
     /* 403 - unauthorized */
     INVALID_AUTHORIZATION_HEADER    (HttpStatus.UNAUTHORIZED, "F40301", "Invalid authorization header. Please check your request."   ),
     INVALID_JSON_WEB_TOKEN          (HttpStatus.UNAUTHORIZED, "F40302", "Invalid json web token. Please check your request."         ),
-    INVALID_USER_CREDENTIALS        (HttpStatus.UNAUTHORIZED, "F40303", "Invalid user credentials. Please check your id and password"),
+    INVALID_USER_CREDENTIALS        (HttpStatus.UNAUTHORIZED, "F40303", "유효하지 않은 사용자 인증 정보."),
 
     /* 404 - not found */
     REQUEST_BODY_NOT_FOUND          (HttpStatus.NOT_FOUND, "F40401", "request body not found. please check your request"            ),
     ENTITY_NOT_FOUND                (HttpStatus.NOT_FOUND, "F40402", "can not find entity. please check your request"               ),
+
+    /* 409 - conflict */
+    ALREADY_EXISTS_ENTITY           (HttpStatus.CONFLICT, "F40901", "이미 DB에 존재하는 데이터")
 
     ;
 

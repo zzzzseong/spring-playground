@@ -20,7 +20,4 @@ public class ApiConst {
     public static final int MIN_PAGE_SIZE               = 1;
     public static final int MAX_PAGE_SIZE               = 1000;
 
-    /* validation */
-    public static final String NOT_NULL_MESSAGE         = "필수 입력값이 누락되었습니다.";
-
 }

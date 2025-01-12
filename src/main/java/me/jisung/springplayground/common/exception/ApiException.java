@@ -14,24 +14,36 @@ public class ApiException extends RuntimeException {
     public ApiException(Throwable e, HttpStatus httpStatus, String code, String message) {
         super(e);
         this.httpStatus = httpStatus;
-        this.code = code;
-        this.message = message;
+        this.code       = code;
+        this.message    = message;
     }
     public ApiException(Throwable e, ApiErrorCode errorCode) {
         super(e);
         this.httpStatus = errorCode.getHttpStatus();
-        this.code = errorCode.getCode();
-        this.message = errorCode.getMessage();
+        this.code       = errorCode.getCode();
+        this.message    = errorCode.getMessage();
     }
-    public ApiException(ApiErrorCode errorCode) {
+    public ApiException(Throwable e, ApiErrorCode errorCode, String message) {
+        super(e);
         this.httpStatus = errorCode.getHttpStatus();
-        this.code = errorCode.getCode();
-        this.message = errorCode.getMessage();
+        this.code       = errorCode.getCode();
+        this.message    = message;
     }
+
     public ApiException(HttpStatus status, String code, String message) {
         super(message);
         this.httpStatus = status;
-        this.code = code;
-        this.message = message;
+        this.code       = code;
+        this.message    = message;
+    }
+    public ApiException(ApiErrorCode errorCode) {
+        this.httpStatus = errorCode.getHttpStatus();
+        this.code       = errorCode.getCode();
+        this.message    = errorCode.getMessage();
+    }
+    public ApiException(ApiErrorCode errorCode, String message) {
+        this.httpStatus = errorCode.getHttpStatus();
+        this.code       = errorCode.getCode();
+        this.message    = message;
     }
 }
