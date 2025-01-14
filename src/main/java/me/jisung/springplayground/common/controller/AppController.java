@@ -7,6 +7,8 @@ import me.jisung.springplayground.common.exception.Api5xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
 import me.jisung.springplayground.common.util.AesUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,5 +58,11 @@ public class AppController {
             log.error("error occurred while decrypting", e);
             throw new ApiException(Api5xxErrorCode.AES_DECRYPTION_FAILED);
         }
+    }
+
+    @GetMapping("/test/pageable")
+    public ApiResponse<Void> testPageable(@PageableDefault(page = 1, size = 100) Pageable pageable) {
+        log.info("pageable: {}", pageable);
+        return success();
     }
 }
