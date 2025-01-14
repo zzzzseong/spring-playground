@@ -1,6 +1,5 @@
 package me.jisung.springplayground.common.component;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -55,8 +54,8 @@ public class KafkaProducer {
         }
 
         // asynchronous send - future는 비동기 연산에 대한 결과를 표현하는 객체이다.
-        CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(record);
-        future.whenComplete(this::handleResult);
+        // CompletableFuture<SendResult<String, String>> future = kafkaTemplate.send(record);
+        // future.whenComplete(this::handleResult);
     }
 
 

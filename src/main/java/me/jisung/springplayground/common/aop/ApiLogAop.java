@@ -2,6 +2,7 @@ package me.jisung.springplayground.common.aop;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.util.JsonUtil;
@@ -13,8 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.util.Objects;
 
 /**
  * validation -> aop -> controller -> exception throws -> aop -> exception handler
@@ -28,12 +27,15 @@ public class ApiLogAop {
     @Pointcut("execution(* me.jisung.springplayground..controller..*(..))")
     public void controller() {}
 
+    @Pointcut("!execution(* me.jisung.springplayground.common.controller.StompMessageController..*(..))")
+    public void websocket() {}
+
     /**
      * http request 및 response 로그로 기록하는 컨트롤러 AOP.
      * @see me.jisung.springplayground.common.exception.ApiExceptionHandler
      * - [RESPONSE FAIL]에 대한 로깅은 해당 클래스에서 처리
      */
-    @Around("controller()")
+    @Around("controller() && websocket()")
     public Object execute(ProceedingJoinPoint joinPoint) throws Throwable {
         HttpServletRequest request = this.getHttpServletRequest();
         String method   = request.getMethod();

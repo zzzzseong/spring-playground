@@ -1,5 +1,7 @@
 package me.jisung.springplayground.user.controller;
 
+import static me.jisung.springplayground.common.entity.ApiResponse.success;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.entity.ApiResponse;
@@ -24,11 +26,11 @@ public class UserController {
     @PostMapping("")
     public ApiResponse<Void> create(@Validated(UserRequest.Create.class) @RequestBody UserRequest request) {
         userService.create(request);
-        return ApiResponse.success();
+        return success();
     }
 
     @GetMapping("/token")
     public ApiResponse<UserResponse> getToken(@Validated(UserRequest.Token.class) @RequestBody UserRequest request) {
-        return ApiResponse.success(userService.getToken(request));
+        return success(userService.getToken(request));
     }
 }

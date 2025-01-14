@@ -58,7 +58,10 @@ public class SecurityConfig {
 
     private RequestMatcher publicEndPoints() {
         return new OrRequestMatcher(
-            new AntPathRequestMatcher("/api/**")
+            new AntPathRequestMatcher("/api/**"),
+
+            /* websocket */
+            new AntPathRequestMatcher("/ws/chat")
         );
     }
 
