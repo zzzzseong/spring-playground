@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 @Component
 @RequiredArgsConstructor
 @Slf4j(topic = "HttpComponent")
-public class HttpComponent {
+public class HttpHelper {
 
     private final WebClient webClient;
     private final Consumer<HttpHeaders> emptyHeaders = httpHeaders -> {};
