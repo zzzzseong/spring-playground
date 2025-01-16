@@ -3,9 +3,12 @@ package me.jisung.springplayground.common.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.component.KafkaProducer;
+import me.jisung.springplayground.common.component.MongoHelper;
 import me.jisung.springplayground.common.json.vo.StompMessageVo;
 import me.jisung.springplayground.common.util.DateUtil;
 import me.jisung.springplayground.common.util.JsonUtil;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.MessagingException;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StompMessageController {
 
     private final KafkaProducer kafkaProducer;
+    private final MongoHelper mongo;
 
     private final SimpMessagingTemplate template;
 
@@ -29,15 +33,20 @@ public class StompMessageController {
     }
 
     @KafkaListener(topics = "chat")
-    public void consumeMessage(String message) {
+    public void consumeMessage(ConsumerRecords<String, String> records) {
         String now = DateUtil.now(DateUtil.DATE_TIME_FORMAT);
-        log.info("consumed message: {}, timestamp: {}", message, now);
 
         try {
-            template.convertAndSend("/topic/chat", message);
-            log.info("message sent success to /topic/chat");
+            for (ConsumerRecord<String, String> record : records) {
+                String message = record.value();
+                log.info("consumed message: {}, timestamp: {}", message, now);
 
-            //TODO - 여기서 도착한 메시지를 몽고 db에 저장
+                template.convertAndSend("/topic/chat", message);
+                log.info("message sent success to /topic/chat");
+
+                /* save log mongodb data */
+                 mongo.insertOne("chat", message);
+            }
         } catch (MessagingException e) {
             log.error("failed to send message: {}", e.getMessage());
         }

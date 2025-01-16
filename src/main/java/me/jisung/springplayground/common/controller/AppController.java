@@ -1,5 +1,9 @@
 package me.jisung.springplayground.common.controller;
 
+import static me.jisung.springplayground.common.entity.ApiResponse.success;
+
+import java.security.GeneralSecurityException;
+import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.entity.ApiResponse;
@@ -13,11 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.crypto.SecretKey;
-import java.security.GeneralSecurityException;
-
-import static me.jisung.springplayground.common.entity.ApiResponse.success;
 
 @RestController
 @RequiredArgsConstructor
