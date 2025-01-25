@@ -1,4 +1,4 @@
-package me.jisung.springplayground.common.interceptor;
+package me.jisung.springplayground.chat.interceptor;
 
 import java.util.List;
 import java.util.Objects;
