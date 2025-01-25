@@ -30,11 +30,12 @@ public class KafkaProducerConfig {
         // kafka cluster address setting
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
 
-        // object->string serializer setting
-        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        // serializer setting
+        props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG,   StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 
         // 멱등성 프로듀서 세팅 - idempotence producer setting (exactly once)
+        // 카프카 3.x.x 부터는 default 값이 true 이다.
         /* props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);*/
 
         // 트랜젝션 프로듀서 세팅 - transaction producer setting

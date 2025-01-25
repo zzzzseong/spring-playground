@@ -16,7 +16,7 @@ public enum Api4xxErrorCode implements ApiErrorCode{
     INVALID_AUTHORIZATION_HEADER    (HttpStatus.UNAUTHORIZED, "F40101", "인증 해더(Authorization)가 없거나 유효하지 않음"),
     INVALID_JSON_WEB_TOKEN          (HttpStatus.UNAUTHORIZED, "F40102", "유효하지 않은 JWT - 만료, 손상 등"),
     INVALID_USER_CREDENTIALS        (HttpStatus.UNAUTHORIZED, "F40103", "인가 요청 정보(ID, PW)와 일치하는 사용자 정보가 없음"),
-    NOT_FOUND_AUTHENTICATION        (HttpStatus.UNAUTHORIZED, "F40104",  "Security Context 인증 정보를 찾을 수 없음"),
+    NOT_FOUND_AUTHENTICATION        (HttpStatus.UNAUTHORIZED, "F40104", "Security Context 인증 정보를 찾을 수 없음"),
 
     /* 404 - not found */
     REQUEST_BODY_NOT_FOUND          (HttpStatus.NOT_FOUND, "F40401", "사용자의 요청에서 요청 본문을 찾을 수 없음 - 400으로 이동 필요"),
