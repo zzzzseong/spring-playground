@@ -19,4 +19,6 @@ public class UserRequest {
     @Pattern(groups = {Create.class, Token.class}, regexp = ValidationConst.REGEXP_PASSWORD, message = ValidationConst.MESSAGE_REGEXP_INVALID + " (password)")
     private String password;
 
+    @NotNull(groups = {Create.class}, message = ValidationConst.MESSAGE_NOT_NULL + " (name)")
+    private String name;
 }

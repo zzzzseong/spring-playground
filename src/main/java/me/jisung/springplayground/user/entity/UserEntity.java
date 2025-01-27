@@ -8,15 +8,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.io.Serializable;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import me.jisung.springplayground.common.entity.BaseEntity;
 
 @Getter
-@Builder
-@AllArgsConstructor
+@SuperBuilder
 @Entity(name = "user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserEntity extends BaseEntity implements Serializable {

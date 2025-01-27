@@ -32,7 +32,7 @@ public class UserController {
         return success();
     }
 
-    @GetMapping("/token")
+    @PostMapping("/token")
     public ApiResponse<UserResponse> getToken(@Validated(UserRequest.Token.class) @RequestBody UserRequest request) {
         return success(userService.getToken(request));
     }

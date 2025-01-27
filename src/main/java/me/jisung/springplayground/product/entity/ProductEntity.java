@@ -7,13 +7,13 @@ import jakarta.persistence.Id;
 import java.io.Serializable;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import me.jisung.springplayground.common.annotation.ExcelColumn;
 import me.jisung.springplayground.common.entity.SimpleBaseEntity;
 
 
-@Builder
+@SuperBuilder
 @Entity(name="product")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)

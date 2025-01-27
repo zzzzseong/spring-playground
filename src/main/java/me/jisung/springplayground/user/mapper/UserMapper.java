@@ -2,6 +2,7 @@ package me.jisung.springplayground.user.mapper;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import me.jisung.springplayground.common.entity.EntityStatus;
 import me.jisung.springplayground.user.dto.UserRequest;
 import me.jisung.springplayground.user.dto.UserResponse;
 import me.jisung.springplayground.user.entity.UserEntity;
@@ -12,10 +13,12 @@ public class UserMapper {
 
     public static UserEntity toEntity(UserRequest request, String password) {
         return UserEntity.builder()
-                .email(request.getEmail())
-                .password(password)
-                .role(UserRole.USER)
-                .build();
+            .email(request.getEmail())
+            .password(password)
+            .name(request.getName())
+            .status(EntityStatus.ACT)
+            .role(UserRole.USER)
+            .build();
     }
     public static UserResponse toResponse(UserEntity user) {
         return UserResponse.builder()
