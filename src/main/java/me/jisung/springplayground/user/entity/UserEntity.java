@@ -27,6 +27,7 @@ public class UserEntity extends BaseEntity implements Serializable {
 
     private String email;
     private String password;
+    private String name;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;

@@ -3,8 +3,7 @@ package me.jisung.springplayground.chat.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.chat.collection.ChatMessageCollection;
-import me.jisung.springplayground.chat.component.MongoHelper;
-import me.jisung.springplayground.chat.dto.ChatMessageRequestVo;
+import me.jisung.springplayground.chat.dto.ChatMessageRequest;
 import me.jisung.springplayground.chat.mapper.ChatMapper;
 import me.jisung.springplayground.chat.repository.ChatMessageRepository;
 import me.jisung.springplayground.common.component.KafkaProducer;
@@ -27,13 +26,11 @@ public class MessageController {
     private final ChatMessageRepository chatMessageRepository;
 
     private final KafkaProducer kafkaProducer;
-    private final MongoHelper mongo;
-
     private final SimpMessagingTemplate template;
 
     /* wss://{host}:{port}/app/chat 경로로 메시지 수신 */
     @MessageMapping("/chat")
-    public void publishMessage(@RequestBody ChatMessageRequestVo request) {
+    public void publishMessage(@RequestBody ChatMessageRequest request) {
         /* 발행 요청 데이터 프로듀싱 */
         ChatMessageCollection message = ChatMapper.toMessageCollection(request);
         kafkaProducer.produce(KafkaConst.TOPIC_NAME_CHAT, JsonUtil.toJson(message));
