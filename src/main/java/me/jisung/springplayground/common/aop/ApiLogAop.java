@@ -27,7 +27,7 @@ public class ApiLogAop {
     @Pointcut("execution(* me.jisung.springplayground..controller..*(..))")
     public void controller() {}
 
-    @Pointcut("!execution(* me.jisung.springplayground.chat.StompMessageController..*(..))")
+    @Pointcut("!execution(* me.jisung.springplayground.chat.controller.MessageController..*(..))")
     public void websocket() {}
 
     /**

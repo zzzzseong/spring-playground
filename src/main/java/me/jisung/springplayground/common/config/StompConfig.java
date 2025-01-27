@@ -1,7 +1,7 @@
-package me.jisung.springplayground.chat.config;
+package me.jisung.springplayground.common.config;
 
 import lombok.RequiredArgsConstructor;
-import me.jisung.springplayground.chat.interceptor.StompChannelInterceptor;
+import me.jisung.springplayground.common.interceptor.StompChannelInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
