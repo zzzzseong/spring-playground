@@ -59,7 +59,7 @@ public class UserService {
             );
 
             String accessToken = jwtProvider.generateAccessToken(request.getEmail());
-            return new UserResponse(accessToken);
+            return UserMapper.toTokenResponse(accessToken);
         } catch (BadCredentialsException e) {
             throw new ApiException(e, Api4xxErrorCode.INVALID_USER_CREDENTIALS, "사용자 인증에 실패하였습니다. 요청 정보를 확인해주세요.");
         }
