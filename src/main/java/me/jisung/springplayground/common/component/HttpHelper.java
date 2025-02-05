@@ -10,12 +10,14 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -44,8 +46,8 @@ public class HttpHelper {
         if(!Objects.isNull(body)) bodySpec.bodyValue(body);
 
         String response = bodySpec.retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, err -> Mono.error(new HttpClientErrorException(err.statusCode())))
-                .onStatus(HttpStatusCode::is5xxServerError, err -> Mono.error(new HttpServerErrorException(err.statusCode())))
+                .onStatus(HttpStatusCode::is4xxClientError, this::handleHttpError)
+                .onStatus(HttpStatusCode::is5xxServerError, this::handleHttpError)
                 .bodyToMono(String.class)
                 .block();
 
@@ -65,13 +67,31 @@ public class HttpHelper {
             .uri(uri)
             .headers(headers)
             .retrieve()
-            .onStatus(HttpStatusCode::is4xxClientError, err -> Mono.error(new HttpClientErrorException(err.statusCode())))
-            .onStatus(HttpStatusCode::is5xxServerError, err -> Mono.error(new HttpServerErrorException(err.statusCode())))
+                .onStatus(HttpStatusCode::is4xxClientError, this::handleHttpError)
+                .onStatus(HttpStatusCode::is5xxServerError, this::handleHttpError)
             .bodyToMono(String.class)
             .block();
 
         if(Objects.isNull(response)) throw new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE);
         log.info("[GET RES] response: {}", response);
+        return response;
+    }
+
+    public String delete(URI uri, Consumer<HttpHeaders> headers) {
+        log.info("[DELETE REQ] uri: {}, headers: {}", uri, this.getHttpHeaders(headers));
+
+        String response = webClient
+                .delete()
+                .uri(uri)
+                .headers(headers)
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, this::handleHttpError)
+                .onStatus(HttpStatusCode::is5xxServerError, this::handleHttpError)
+                .bodyToMono(String.class)
+                .block();
+
+        if(Objects.isNull(response)) throw new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE);
+        log.info("[DELETE RES] response: {}", response);
         return response;
     }
 
@@ -113,5 +133,14 @@ public class HttpHelper {
         HttpHeaders httpHeaders = new HttpHeaders();
         headers.accept(httpHeaders);
         return httpHeaders;
+    }
+
+    private Mono<Throwable> handleHttpError(ClientResponse err) {
+        return err.bodyToMono(String.class).flatMap(errBody -> {
+            HttpStatusCode statusCode = err.statusCode();
+            String statusText = "";
+            if (statusCode instanceof HttpStatus status) statusText = status.name();
+            return Mono.error(new HttpClientErrorException(statusCode, statusText, errBody.getBytes(), StandardCharsets.UTF_8));
+        });
     }
 }

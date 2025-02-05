@@ -11,6 +11,8 @@ public enum Api4xxErrorCode implements ApiErrorCode{
     /* 400 - bad request */
     INVALID_REQUEST_PARAMETER       (HttpStatus.BAD_REQUEST, "F40001", "유효하지않은 파라미터, 필드값"),
     INVALID_REQUEST_BODY            (HttpStatus.BAD_REQUEST, "F40002", "유효하지않은 요청 본문"),
+    FILE_EXTENSION_NOT_FOUND        (HttpStatus.BAD_REQUEST, "F40021", "파일 확장자를 찾을 수 없음"),
+    FILE_EXTENSION_NOT_ALLOWED      (HttpStatus.BAD_REQUEST, "F40022", "허용되지 않는 파일 확장자"),
 
     /* 401 - unauthorized */
     INVALID_AUTHORIZATION_HEADER    (HttpStatus.UNAUTHORIZED, "F40101", "인증 해더(Authorization)가 없거나 유효하지 않음"),

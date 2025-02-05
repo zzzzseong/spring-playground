@@ -1,13 +1,19 @@
 package me.jisung.springplayground.common.exception;
 
-import java.net.BindException;
-import java.util.Objects;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.entity.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
+
+import java.net.BindException;
+import java.util.Objects;
 
 @RestControllerAdvice
 @Slf4j(topic = "ApiExceptionHandler")
@@ -33,6 +39,21 @@ public class ApiExceptionHandler {
             .message(e.getMessage())
             .build();
         return this.apiExceptionHandler(apiException);
+    }
+
+    /**
+     * 외부 http 통신 중 발생한 예외를 처리하는 핸들러
+     * @see me.jisung.springplayground.common.component.HttpHelper
+     * */
+    @ExceptionHandler({HttpClientErrorException.class, HttpServerErrorException.class})
+    public ApiResponse<ApiErrorVo> handleHttpClientErrorException(HttpServletRequest request, HttpStatusCodeException e) {
+        ApiException apiException = ApiException.builder()
+                .e(e)
+                .httpStatus(HttpStatus.valueOf(e.getStatusCode().value()))
+                .code(Api5xxErrorCode.HTTP_REQUEST_FAILED.getCode())
+                .message(e.getResponseBodyAsString())
+                .build();
+        return apiExceptionHandler(apiException);
     }
 
     /**
