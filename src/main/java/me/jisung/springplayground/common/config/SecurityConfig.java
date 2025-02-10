@@ -2,6 +2,7 @@ package me.jisung.springplayground.common.config;
 
 import lombok.RequiredArgsConstructor;
 import me.jisung.springplayground.common.filter.JwtAuthorizationFilter;
+import me.jisung.springplayground.common.filter.JwtExceptionFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +26,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 public class SecurityConfig {
 
     private final JwtAuthorizationFilter jwtAuthorizationFilter;
+    private final JwtExceptionFilter jwtExceptionFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -52,6 +54,7 @@ public class SecurityConfig {
         );
 
         httpSecurity.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(jwtExceptionFilter, JwtAuthorizationFilter.class);
 
         return httpSecurity.build();
     }
