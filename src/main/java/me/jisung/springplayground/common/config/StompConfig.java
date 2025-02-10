@@ -26,15 +26,10 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
         registry
             .addEndpoint("/ws/chat")
             .setAllowedOrigins("*");
-//            .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        // default in-memory broker 사용 및 메시지 발행 경로 prefix 설정
-        // 외부 브로커 사용 시 아래 설정 제거
-        // config.enableSimpleBroker("/topic");
-
         // 메시지 발행 전 내부 컨트롤러로 전달
         config.setApplicationDestinationPrefixes("/app");
     }
