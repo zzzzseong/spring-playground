@@ -42,3 +42,6 @@ src/main/resources/application-*.yml
 
 ### logback ###
 /logs
+
+### docker volume ###
+/db

@@ -29,8 +29,12 @@ public class HttpHelper {
     private final WebClient webClient;
     private final Consumer<HttpHeaders> emptyHeaders = httpHeaders -> {};
 
+
     public String post(URI uri) throws HttpStatusCodeException {
         return this.post(uri, this.emptyHeaders, null);
+    }
+    public String post(URI uri, Object body) throws HttpStatusCodeException {
+        return this.post(uri, this.emptyHeaders, body);
     }
     public String post(URI uri, Consumer<HttpHeaders> headers) throws HttpStatusCodeException {
         return this.post(uri, headers, null);
@@ -56,6 +60,7 @@ public class HttpHelper {
         return response;
     }
 
+
     public String get(URI uri) throws HttpStatusCodeException {
         return this.get(uri, this.emptyHeaders);
     }
@@ -77,6 +82,7 @@ public class HttpHelper {
         return response;
     }
 
+
     public String delete(URI uri, Consumer<HttpHeaders> headers) {
         log.info("[DELETE REQ] uri: {}, headers: {}", uri, this.getHttpHeaders(headers));
 
@@ -94,6 +100,7 @@ public class HttpHelper {
         log.info("[DELETE RES] response: {}", response);
         return response;
     }
+
 
     public URI buildUri(String scheme, String host) {
         return UriComponentsBuilder.newInstance()
