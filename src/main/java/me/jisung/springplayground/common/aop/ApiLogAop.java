@@ -1,8 +1,6 @@
 package me.jisung.springplayground.common.aop;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.util.JsonUtil;
@@ -11,9 +9,10 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.util.Objects;
 
 /**
  * validation -> aop -> controller -> exception throws -> aop -> exception handler
@@ -40,9 +39,8 @@ public class ApiLogAop {
         HttpServletRequest request = this.getHttpServletRequest();
         String method   = request.getMethod();
         String uri      = request.getRequestURI();
-        String body     = getBodyString(joinPoint);
 
-        log.info("[API REQUEST SUCCESS] method: {}, uri: {}, body: {}", method, uri, body);
+        log.info("[API REQUEST SUCCESS] method: {}, uri: {}", method, uri);
 
         Object result = null;
         try {
@@ -55,15 +53,5 @@ public class ApiLogAop {
 
     private HttpServletRequest getHttpServletRequest() {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    }
-
-    private String getBodyString(ProceedingJoinPoint joinPoint) {
-        StringBuilder sb = new StringBuilder();
-        for (Object arg : joinPoint.getArgs()) {
-            if (!(arg instanceof HttpServletRequest) && !(arg instanceof HttpServletResponse) && !(arg instanceof BindingResult)) {
-                sb.append(JsonUtil.toJson(arg));
-            }
-        }
-        return sb.toString();
     }
 }

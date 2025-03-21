@@ -1,6 +1,5 @@
 package me.jisung.springplayground.common.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.entity.ApiResponse;
 import org.springframework.http.HttpStatus;
@@ -12,7 +11,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import java.net.BindException;
 import java.util.Objects;
 
 @RestControllerAdvice
@@ -46,7 +44,7 @@ public class ApiExceptionHandler {
      * @see me.jisung.springplayground.common.component.HttpHelper
      * */
     @ExceptionHandler({HttpClientErrorException.class, HttpServerErrorException.class})
-    public ApiResponse<ApiErrorVo> handleHttpClientErrorException(HttpServletRequest request, HttpStatusCodeException e) {
+    public ApiResponse<ApiErrorVo> handleHttpClientErrorException(HttpStatusCodeException e) {
         ApiException apiException = ApiException.builder()
                 .e(e)
                 .httpStatus(HttpStatus.valueOf(e.getStatusCode().value()))
@@ -73,18 +71,16 @@ public class ApiExceptionHandler {
     }
 
     /**
-     * RequestBody, ModelAttribute validation exception handler
+     * 필드 검증 실패 시 발생하는 예외 처리 (jakarta.validation.Valid 사용 시)
+     * <br>- application/json 요청에 대해 validation 통과하지 못했을 시 발생
+     * <br>- multipart/form-data 요청에 대해 validation 통과하지 못했을 시 발생
+     * <br>- enum 타입 변환 실패 시 발생
      * */
-    @ExceptionHandler({MethodArgumentNotValidException.class, BindException.class})
-    public ApiResponse<ApiErrorVo> validationExceptionHandler(MethodArgumentNotValidException e) {
-        Api4xxErrorCode errorCode = Api4xxErrorCode.INVALID_REQUEST_BODY;
-        ApiException apiException = ApiException.builder()
-            .e(e)
-            .httpStatus(errorCode.getHttpStatus())
-            .code(errorCode.getCode())
-            .message(e.getBindingResult().getAllErrors().get(0).getDefaultMessage())
-            .build();
-
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ApiResponse<ApiErrorVo> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        log.info("handleMethodArgumentNotValidException");
+        String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        ApiException apiException = new ApiException(e, Api4xxErrorCode.INVALID_REQUEST_BODY, message);
         return this.apiExceptionHandler(apiException);
     }
 }
