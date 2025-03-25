@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import me.jisung.springplayground.user.entity.UserEntity;
 
 @Getter
-@Entity(name="product")
+@Entity(name="product_user")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductUserEntity {
 
