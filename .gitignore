@@ -44,4 +44,4 @@ src/main/resources/application-*.yml
 /logs
 
 ### docker volume ###
-/db
+/docker
