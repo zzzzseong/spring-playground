@@ -1,22 +1,23 @@
 package me.jisung.springplayground.common.controller;
 
-import static me.jisung.springplayground.common.entity.ApiResponse.success;
-
-import java.security.GeneralSecurityException;
-import javax.crypto.SecretKey;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.entity.ApiResponse;
 import me.jisung.springplayground.common.exception.Api5xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
 import me.jisung.springplayground.common.util.AesUtil;
+import me.jisung.springplayground.common.util.JsonUtil;
+import me.jisung.springplayground.product.data.ProductDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.crypto.SecretKey;
+import java.security.GeneralSecurityException;
+
+import static me.jisung.springplayground.common.entity.ApiResponse.success;
 
 @RestController
 @RequiredArgsConstructor
@@ -63,5 +64,35 @@ public class AppController {
     public ApiResponse<Void> testPageable(@PageableDefault(page = 1, size = 100) Pageable pageable) {
         log.info("pageable: {}", pageable);
         return success();
+    }
+
+
+
+    /**
+     * 블로그 정리 필요
+     * 클라이언트로 부터 요청이 들어올때 DTO 클래스에 기본 생성자를 찾는데, 기본 생성자가 없으면 다른 생성자로 대체한다.
+     * */
+    @PostMapping("/test/dto-constructor")
+    public ApiResponse<Void> testDtoConstructor(@RequestBody TestDto testDto) {
+
+        log.info("testDto: {}", testDto);
+
+        return success();
+    }
+
+    @Getter
+    public static class TestDto {
+        private String val1;
+        private String val2;
+
+        // 에러 발생
+        public TestDto(ProductDTO dto) {
+            dto.getPrice();
+        }
+
+        @Override
+        public String toString() {
+            return JsonUtil.toJson(this);
+        }
     }
 }
