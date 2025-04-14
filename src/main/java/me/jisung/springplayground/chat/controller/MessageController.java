@@ -6,7 +6,7 @@ import me.jisung.springplayground.chat.collection.ChatMessageCollection;
 import me.jisung.springplayground.chat.dto.ChatMessageRequest;
 import me.jisung.springplayground.chat.mapper.ChatMapper;
 import me.jisung.springplayground.chat.repository.ChatMessageRepository;
-import me.jisung.springplayground.common.component.KafkaProducer;
+import me.jisung.springplayground.common.component.KafkaProducerImpl;
 import me.jisung.springplayground.common.constant.KafkaConst;
 import me.jisung.springplayground.common.util.JsonUtil;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -25,7 +25,7 @@ public class MessageController {
 
     private final ChatMessageRepository chatMessageRepository;
 
-    private final KafkaProducer kafkaProducer;
+    private final KafkaProducerImpl kafkaProducer;
     private final SimpMessagingTemplate template;
 
     /* wss://{host}:{port}/app/chat 경로로 메시지 수신 */
