@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
@@ -27,7 +28,10 @@ import java.util.function.Consumer;
 public class HttpHelper {
 
     private final WebClient webClient;
+
     private final Consumer<HttpHeaders> emptyHeaders = httpHeaders -> {};
+    private final Consumer<HttpHeaders> jsonHeaders = httpHeaders -> httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
+    private final Consumer<HttpHeaders> formDataHeaders = httpHeaders -> httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE);
 
 
     public String post(URI uri) throws HttpStatusCodeException {

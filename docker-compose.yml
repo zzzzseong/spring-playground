@@ -30,7 +30,8 @@ services:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
     volumes:
-      - ./docker/rabbitmq/etc/:/etc/rabbitmq/
+      # RabbitMQ 설정을 따로 커스터마이징할 게 아니라면, 그냥 아래처럼 /etc/rabbitmq/ 마운트를 삭제하는 게 깔끔함
+      # - ./docker/rabbitmq/etc/:/etc/rabbitmq/
       - ./docker/rabbitmq/data/:/var/lib/rabbitmq/
       - ./docker/rabbitmq/logs/:/var/log/rabbitmq/
     ports:
@@ -38,7 +39,5 @@ services:
       - "15672:15672"
     environment:
       RABBITMQ_ERLANG_COOKIE: rabbitmq
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin
-#volumes:
-#  mongodb_data:
+      RABBITMQ_DEFAULT_USER: playground
+      RABBITMQ_DEFAULT_PASS: playground

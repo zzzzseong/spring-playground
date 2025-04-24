@@ -7,6 +7,7 @@ import me.jisung.springplayground.common.entity.ApiResponse;
 import me.jisung.springplayground.common.exception.Api5xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
 import me.jisung.springplayground.common.util.AesUtil;
+import me.jisung.springplayground.common.util.IntegerUtil;
 import me.jisung.springplayground.common.util.JsonUtil;
 import me.jisung.springplayground.product.data.ProductDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -66,6 +67,11 @@ public class AppController {
         return success();
     }
 
+    @GetMapping("/test/util/integer")
+    public ApiResponse<Void> testIntegerUtil(@RequestParam String number) {
+        IntegerUtil.parseInt(number);
+        return success();
+    }
 
 
     /**
