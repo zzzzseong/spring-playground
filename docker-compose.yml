@@ -39,5 +39,5 @@ services:
       - "15672:15672"
     environment:
       RABBITMQ_ERLANG_COOKIE: rabbitmq
-      RABBITMQ_DEFAULT_USER: playground
-      RABBITMQ_DEFAULT_PASS: playground
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
