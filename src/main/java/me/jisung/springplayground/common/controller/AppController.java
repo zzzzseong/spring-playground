@@ -3,17 +3,19 @@ package me.jisung.springplayground.common.controller;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.jisung.springplayground.common.component.AsyncMailSender;
 import me.jisung.springplayground.common.entity.ApiResponse;
 import me.jisung.springplayground.common.exception.Api5xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
 import me.jisung.springplayground.common.util.AesUtil;
-import me.jisung.springplayground.common.util.IntegerUtil;
 import me.jisung.springplayground.common.util.JsonUtil;
 import me.jisung.springplayground.product.data.ProductDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import javax.crypto.SecretKey;
 import java.security.GeneralSecurityException;
@@ -67,9 +69,20 @@ public class AppController {
         return success();
     }
 
-    @GetMapping("/test/util/integer")
-    public ApiResponse<Void> testIntegerUtil(@RequestParam String number) {
-        IntegerUtil.parseInt(number);
+    private final AsyncMailSender asyncMailSender;
+    private final TemplateEngine templateEngine;
+
+    @GetMapping("/test/mail")
+    public ApiResponse<Void> testMail(@RequestParam String to) {
+
+        Context context = new Context();
+        context.setVariable("username", "jisung");
+        context.setVariable("loginUrl", "https://www.naver.com");
+
+        String content = templateEngine.process("mail/signup", context);
+
+        asyncMailSender.sendMail(to, "메일 발송 테스트", content);
+
         return success();
     }
 
