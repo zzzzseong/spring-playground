@@ -4,6 +4,44 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+/**
+ * HTTP 4xx 클라이언트 오류 코드에 대한 정의를 나타내는 Enum 클래스입니다.
+ * 이 클래스는 클라이언트 측에서 발생한 요청 오류에 대한 코드와 메시지를 정의합니다.
+ * 각 오류 코드에는 적절한 HTTP 상태 코드와 고유의 에러 코드, 설명이 포함됩니다.
+ *
+ * <p>4xx 상태 코드 목록:</p>
+ * <ul>
+ *   <li><b>400 - Bad Request:</b> 클라이언트의 요청 구문이 잘못되었습니다.</li>
+ *   <li><b>401 - Unauthorized:</b> 클라이언트는 리소스에 액세스할 권한이 없습니다.</li>
+ *   <li><b>402 - Payment Required:</b> 리소스를 액세스하기 위해 결제가 필요하지만 실제로는 사용되지 않습니다.</li>
+ *   <li><b>403 - Forbidden:</b> 리소스에 대한 액세스가 금지되었습니다.</li>
+ *   <li><b>404 - Not Found:</b> 지정한 리소스를 찾을 수 없습니다.</li>
+ *   <li><b>405 - Method Not Allowed:</b> 요청한 메소드가 지원되지 않습니다.</li>
+ *   <li><b>406 - Not Acceptable:</b> 클라이언트가 요청한 내용 타입을 서버가 처리할 수 없습니다.</li>
+ *   <li><b>407 - Proxy Authentication Required:</b> 프록시 서버 인증이 필요합니다.</li>
+ *   <li><b>408 - Request Timeout:</b> 서버가 클라이언트의 요청을 기다리다 타임아웃이 발생했습니다.</li>
+ *   <li><b>409 - Conflict:</b> 서버가 요청을 처리하는 동안 충돌이 발생했습니다.</li>
+ *   <li><b>410 - Gone:</b> 리소스가 현재는 존재하지 않습니다.</li>
+ *   <li><b>411 - Length Required:</b> 요청 헤더에 Content-Length가 지정되어야 합니다.</li>
+ *   <li><b>412 - Precondition Failed:</b> 사전 조건이 서버와 맞지 않습니다.</li>
+ *   <li><b>413 - Request Entity Too Large:</b> 요청 메시지가 너무 큽니다.</li>
+ *   <li><b>414 - Request-URI Too Large:</b> 요청 URI가 너무 길어서 서버에서 처리할 수 없습니다.</li>
+ *   <li><b>415 - Unsupported Media Type:</b> 클라이언트가 요청한 미디어 타입을 서버가 지원하지 않습니다.</li>
+ *   <li><b>416 - Range Not Satisfiable:</b> 지정된 리소스의 범위가 서버 리소스와 맞지 않습니다.</li>
+ *   <li><b>417 - Expectation Failed:</b> 클라이언트가 지정한 Expect 헤더를 서버가 이해할 수 없습니다.</li>
+ *   <li><b>418 ~ 421 - Unassigned:</b> 현재 할당되지 않은 상태 코드입니다.</li>
+ *   <li><b>422 - Unprocessable Entity:</b> 클라이언트가 송신한 XML은 구문은 맞지만 의미상 오류가 있습니다.</li>
+ *   <li><b>423 - Locked:</b> 지정한 리소스가 잠겨 있습니다.</li>
+ *   <li><b>424 - Failed Dependency:</b> 다른 작업의 실패로 인해 본 요청도 실패했습니다.</li>
+ *   <li><b>426 - Upgrade Required:</b> 클라이언트가 사용할 프로토콜을 업그레이드해야 합니다.</li>
+ *   <li><b>428 - Precondition Required:</b> If-Match와 같은 사전 조건을 지정하는 헤더가 필요합니다.</li>
+ *   <li><b>429 - Too Many Requests:</b> 클라이언트가 너무 많은 요청을 보내서 서버에서 거부합니다.</li>
+ *   <li><b>431 - Request Header Fields Too Large:</b> 요청 헤더의 크기가 너무 큽니다.</li>
+ *   <li><b>444 - Connection Closed Without Response:</b> 응답 없이 연결을 종료한 경우(NGINX).</li>
+ *   <li><b>451 - Unavailable For Legal Reasons:</b> 법적 사유로 요청한 리소스를 사용할 수 없습니다.</li>
+ *   <li><b>452 ~ 499 - Unassigned:</b> 현재 할당되지 않은 상태 코드입니다.</li>
+ * </ul>
+ */
 @Getter
 @AllArgsConstructor
 public enum Api4xxErrorCode implements ApiErrorCode{

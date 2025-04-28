@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 
 
-
+/**
+ * <a href='https://www.baeldung.com/spring-email'>Baeldung Guide</a>
+ * */
 @Component
 @RequiredArgsConstructor
 @Slf4j(topic = "MainSender")
