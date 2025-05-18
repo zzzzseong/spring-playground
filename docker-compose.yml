@@ -41,3 +41,13 @@ services:
       RABBITMQ_ERLANG_COOKIE: rabbitmq
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis/data:/data
+      - ./docker/redis/conf/redis.conf:/usr/local/etc/redis/redis.conf
+

@@ -15,6 +15,12 @@ java {
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+    maven { url 'https://repo.spring.io/snapshot' }
+    maven {
+        name = 'Central Portal Snapshots'
+        url = 'https://central.sonatype.com/repository/maven-snapshots/'
+    }
 }
 
 dependencies {
@@ -28,6 +34,11 @@ dependencies {
     implementation          'org.springframework.boot:spring-boot-starter-aop'
     implementation          'org.springframework.boot:spring-boot-starter-mail'
     implementation          'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    // ai
+    implementation 'org.springframework.ai:spring-ai-core:1.0.0-M6'
+//    implementation          'org.springframework.ai:spring-ai-bom:1.0.0-SNAPSHOT'
+//    implementation          'org.springframework.ai:spring-ai-starter-mcp-server'
 
     // messaging
     implementation          'org.springframework.boot:spring-boot-starter-amqp'
