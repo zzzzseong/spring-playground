@@ -1,6 +1,11 @@
 package me.jisung.springplayground.common.controller;
 
-import lombok.Getter;
+import static me.jisung.springplayground.common.entity.ApiResponse.success;
+
+import com.google.gson.JsonObject;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.component.AsyncMailSender;
@@ -8,19 +13,17 @@ import me.jisung.springplayground.common.entity.ApiResponse;
 import me.jisung.springplayground.common.exception.Api5xxErrorCode;
 import me.jisung.springplayground.common.exception.ApiException;
 import me.jisung.springplayground.common.util.AesUtil;
-import me.jisung.springplayground.common.util.JsonUtil;
-import me.jisung.springplayground.product.data.ProductDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.DispatcherServlet;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-
-import javax.crypto.SecretKey;
-import java.security.GeneralSecurityException;
-
-import static me.jisung.springplayground.common.entity.ApiResponse.success;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,6 +38,7 @@ public class AppController {
     public ApiResponse<Void> health() {
         return success();
     }
+
 
     @GetMapping("/test/aes/enc")
     public ApiResponse<String> testAesEnc(@RequestParam("plainText") String plainText) {
@@ -63,11 +67,13 @@ public class AppController {
         }
     }
 
+
     @GetMapping("/test/pageable")
     public ApiResponse<Void> testPageable(@PageableDefault(page = 1, size = 100) Pageable pageable) {
         log.info("pageable: {}", pageable);
         return success();
     }
+
 
     private final AsyncMailSender asyncMailSender;
     private final TemplateEngine templateEngine;
@@ -87,31 +93,65 @@ public class AppController {
     }
 
 
-    /**
-     * 블로그 정리 필요
-     * 클라이언트로 부터 요청이 들어올때 DTO 클래스에 기본 생성자를 찾는데, 기본 생성자가 없으면 다른 생성자로 대체한다.
-     * */
-    @PostMapping("/test/dto-constructor")
-    public ApiResponse<Void> testDtoConstructor(@RequestBody TestDto testDto) {
+//    [Application Data]
+//            ↓
+//    [ TCP Header + Data ] = TCP Segment
+//            ↓
+//    [ IP Header + TCP Segment ] = IP Packet
+//            ↓
+//    [ Ethernet Header + IP Packet ] = Frame (링크 계층)
+    @PostMapping("/test/serialize")
+    public ApiResponse<Void> serialize() {
 
-        log.info("testDto: {}", testDto);
+        JsonObject jsonObj = new JsonObject();
+//        jsonObj.addProperty("username", "playground");
+//        jsonObj.addProperty("password", "playground");
+        jsonObj.addProperty("username","jisung");
+
+        log.info("@@@@@@ Application Layer @@@@@@");
+        log.info("[1] JSON Object: {}", jsonObj);
+
+        byte[] bytes = jsonObj.toString().getBytes();
+        log.info("[2] JSON as byte array: {}", Arrays.toString(bytes));
+
+        String[] hexArray = new String[bytes.length];
+        for (int i = 0; i < bytes.length; i++) hexArray[i] = Integer.toHexString(bytes[i]);
+        log.info("[3] Hex representation of byte array: {}", Arrays.toString(hexArray));
+
+        log.info("@@@@@@ Transport Layer @@@@@@");
+        byte[] tcpHeader = new byte[] {
+                // Source Port (12345) = 0x30 0x39
+                0x30, 0x39,
+                // Destination Port (8080) = 0x1F 0x90
+                0x1F, (byte)0x90,
+                // Sequence Number (예시: 1) = 0x00 0x00 0x00 0x01
+                0x00, 0x00, 0x00, 0x01,
+                // Acknowledgment Number (예시: 0)
+                0x00, 0x00, 0x00, 0x00,
+                // Data Offset (5) + Reserved + Flags (SYN=1)
+                0x50, 0x02,
+                // Window Size (예시)
+                0x71, 0x10,
+                // Checksum (0으로 채움)
+                0x00, 0x00,
+                // Urgent Pointer
+                0x00, 0x00,
+        };
+
+        String[] tcpSegment = new String[tcpHeader.length + hexArray.length];
+        for(int i = 0; i < tcpHeader.length; i++) tcpSegment[i] = Integer.toHexString(tcpHeader[i]);
+        for(int i = 0; i < hexArray.length; i++) tcpSegment[i + tcpHeader.length] = hexArray[i];
+        log.info("[4] TCP Segment: {}", Arrays.toString(tcpSegment));
+
 
         return success();
     }
 
-    @Getter
-    public static class TestDto {
-        private String val1;
-        private String val2;
+    @GetMapping("/test/temp")
+    public ApiResponse<Void> temp() {
 
-        // 에러 발생
-        public TestDto(ProductDTO dto) {
-            dto.getPrice();
-        }
+        DispatcherServlet ds = new DispatcherServlet();
 
-        @Override
-        public String toString() {
-            return JsonUtil.toJson(this);
-        }
+        return success();
     }
 }

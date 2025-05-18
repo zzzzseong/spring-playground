@@ -26,7 +26,7 @@ public class MessageController {
     private final ChatMessageRepository chatMessageRepository;
 
     private final KafkaProducerImpl kafkaProducer;
-    private final SimpMessagingTemplate template;
+    private final SimpMessagingTemplate messagingTemplate;
 
     /* wss://{host}:{port}/app/chat 경로로 메시지 수신 */
     @MessageMapping("/chat")
@@ -47,9 +47,9 @@ public class MessageController {
                 log.info("message consumed - topic: {}, message: {}", KafkaConst.TOPIC_NAME_CHAT, message);
 
                 /* 채팅방 구독 사용자에게 메시지 전송 */
-                ChatMessageCollection chatMessageRequestVo = JsonUtil.fromJson(record.value(), ChatMessageCollection.class);
-                String stompTopic = "/topic/chat/" + chatMessageRequestVo.getRoomId();
-                template.convertAndSend(stompTopic, message);
+                ChatMessageCollection messageCollection = JsonUtil.fromJson(message, ChatMessageCollection.class);
+                String stompTopic = "/topic/chat/" + messageCollection.getRoomId();
+                messagingTemplate.convertAndSend(stompTopic, message);
                 log.info("message sent success to [{}]", stompTopic);
             }
         } catch (MessagingException e) {
