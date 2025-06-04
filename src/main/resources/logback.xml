@@ -5,7 +5,7 @@
     <property name="LOG_HOME" value="./logs"/>
     <property name="LOG_FILE_NAME" value="spring_playground"/>
 
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="console-appender" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
                 <pattern>%clr([%d{yyyy/MM/dd HH:mm:ss.SSS}]){green} %clr([%5p]) %clr([%3t]){yellow} %clr([%class{0}]){yellow} %m%n</pattern>
@@ -13,23 +13,76 @@
         </layout>
     </appender>
 
-    <appender name="rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="main-log-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${LOG_FILE_NAME}.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
                 %clr([%d{yyyy/MM/dd HH:mm:ss.SSS}]){green} %clr([%5p]) %clr([%3t]){yellow} %clr([%class{0}]){yellow} %m%n
             </Pattern>
         </encoder>
-        <file>${LOG_HOME}/${LOG_FILE_NAME}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
             <fileNamePattern>${LOG_HOME}/${LOG_FILE_NAME}.%d{yyyyMMdd}.log.gz</fileNamePattern>
             <maxHistory>30</maxHistory>
         </rollingPolicy>
+    </appender>
 
+    <appender name="error-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/error/${LOG_FILE_NAME}_error.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level> <!--ERROR Level의 로그만 출력-->
+            <onMatch>ACCEPT</onMatch> <!--Level이 같은 경우 쓰기 허용-->
+            <onMismatch>DENY</onMismatch> <!--Level이 다른 경우는 무시-->
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%clr([%d{yyyy/MM/dd HH:mm:ss.SSS}]){green} %clr([%5p]) %clr([%3t]){yellow} %clr([%class{0}]){yellow} %m%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_HOME}/error/${LOG_FILE_NAME}_error.%d{yyyyMMdd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
     </appender>
 
     <root level="info">
-        <appender-ref ref="console"/>
-        <appender-ref ref="rolling"/>
+        <appender-ref ref="console-appender"/>
+        <appender-ref ref="main-log-appender"/>
+        <appender-ref ref="error-appender"/>
     </root>
+
+    <!-- 특정 클래스에 대해 로그 레벨 적용 -->
+    <!-- AppController의 로그는 DEBUG 레벨까지 출력 -->
+    <!-- 만약, main은 info만, console은 debug 레벨까지 출력하고 싶다면 console appender에 filter 추가 -->
+    <!-- [additivity] 로그 전파 옵션 -->
+<!--    <logger name="AppController" level="debug" additivity="false">-->
+<!--        <appender-ref ref="console-appender"/>-->
+<!--        <appender-ref ref="main-log-appender"/>-->
+<!--    </logger>-->
+
+    <!-- 특정 패키지에 대해 로그 레벨 적용 -->
+<!--    <logger name="me.jisung.springplayground.product" level="debug" additivity="false">-->
+<!--        <appender-ref ref="console-appender"/>-->
+<!--        <appender-ref ref="main-log-appender"/>-->
+<!--    </logger>-->
+
+
+    <!-- Kafka 관련 로그 설정 -->
+    <appender name="kafka-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/kafka/${LOG_FILE_NAME}_kafka.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%clr([%d{yyyy/MM/dd HH:mm:ss.SSS}]){green} %clr([%5p]) %clr([%3t]){yellow} %clr([%class{0}]){yellow} %m%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>${LOG_HOME}/kafka/${LOG_FILE_NAME}_kafka.%d{yyyyMMdd}.log.gz</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+    </appender>
+    <logger name="org.springframework.kafka" level="INFO" additivity="false">
+        <appender-ref ref="kafka-appender"/>
+    </logger>
+    <logger name="org.apache.kafka" level="INFO" additivity="false">
+        <appender-ref ref="kafka-appender"/>
+    </logger>
+
 </configuration>

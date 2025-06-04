@@ -13,12 +13,12 @@
 
     <!-- .log 저장용 appender -->
     <appender name="rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/${LOG_FILE_NAME}.log</file>
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>
                 %green([%d{yyyy/MM/dd HH:mm:ss.SSS}]) %highlight([%5p]) %yellow([%3t]) %yellow([%class{0}]) %m%n
             </Pattern>
         </encoder>
-        <file>${LOG_HOME}/${LOG_FILE_NAME}.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- rollover daily -->
             <fileNamePattern>${LOG_HOME}/${LOG_FILE_NAME}.%d{yyyyMMdd}.log.gz</fileNamePattern>
