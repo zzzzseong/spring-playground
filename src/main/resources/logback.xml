@@ -29,11 +29,22 @@
 
     <appender name="error-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOG_HOME}/error/${LOG_FILE_NAME}_error.log</file>
+
+        <!-- LevelFilter -->
+        <!-- 특정 레벨만 필터링 한다. 특정 레벨만 허용하거나 특정 레벨만 제외할때 사용한다 .-->
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>ERROR</level> <!--ERROR Level의 로그만 출력-->
             <onMatch>ACCEPT</onMatch> <!--Level이 같은 경우 쓰기 허용-->
             <onMismatch>DENY</onMismatch> <!--Level이 다른 경우는 무시-->
         </filter>
+
+        <!-- ThresholdFilter -->
+        <!-- 설정한 레벨 이상의 모든 로그 이벤트를 허용한다. 아래와 같이 Level을 'WARN' 으로 설정하면 'WARN', 'ERROR' 레벨의 로그를 허용한다. -->
+<!--        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">-->
+<!--            <level>WARN</level> &lt;!&ndash; WARN Level 이상의 로그만 출력 &ndash;&gt;-->
+<!--        </filter>-->
+
+
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
             <Pattern>%clr([%d{yyyy/MM/dd HH:mm:ss.SSS}]){green} %clr([%5p]) %clr([%3t]){yellow} %clr([%class{0}]){yellow} %m%n</Pattern>
         </encoder>
