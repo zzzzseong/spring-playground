@@ -1,6 +1,7 @@
 package me.jisung.springplayground.product.mapper;
 
-import me.jisung.springplayground.product.data.ProductDTO;
+import me.jisung.springplayground.product.data.ProductRequest;
+import me.jisung.springplayground.product.data.ProductResponse;
 import me.jisung.springplayground.product.entity.ProductEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -10,8 +11,10 @@ public interface ProductStructMapper {
 
     ProductStructMapper INSTANCE = Mappers.getMapper(ProductStructMapper.class);
 
-    ProductEntity toEntity(ProductDTO productDTO);
+    ProductEntity toEntity(ProductRequest productRequest);
 
-    ProductDTO toDTO(ProductEntity productEntity);
+    ProductRequest toDTO(ProductEntity productEntity);
+
+    ProductResponse toResponse(ProductEntity productEntity);
 
 }

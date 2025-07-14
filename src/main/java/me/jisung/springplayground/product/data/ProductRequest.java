@@ -9,7 +9,7 @@ import me.jisung.springplayground.common.constant.ValidationConst;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ProductDTO {
+public class ProductRequest {
 
     @NotNull(message = ValidationConst.MESSAGE_NOT_NULL + "(name)")
     private String name;

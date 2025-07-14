@@ -1,11 +1,6 @@
 package me.jisung.springplayground.common.controller;
 
-import static me.jisung.springplayground.common.entity.ApiResponse.success;
-
 import com.google.gson.JsonObject;
-import java.security.GeneralSecurityException;
-import java.util.Arrays;
-import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.component.AsyncMailSender;
@@ -16,14 +11,15 @@ import me.jisung.springplayground.common.util.AesUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
+
+import javax.crypto.SecretKey;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
+
+import static me.jisung.springplayground.common.entity.ApiResponse.success;
 
 @RestController
 @RequiredArgsConstructor
@@ -93,13 +89,13 @@ public class AppController {
     }
 
 
-//    [Application Data]
-//            ↓
-//    [ TCP Header + Data ] = TCP Segment
-//            ↓
-//    [ IP Header + TCP Segment ] = IP Packet
-//            ↓
-//    [ Ethernet Header + IP Packet ] = Frame (링크 계층)
+    //    [Application Data]
+    //            ↓
+    //    [ TCP Header + Data ] = TCP Segment
+    //            ↓
+    //    [ IP Header + TCP Segment ] = IP Packet
+    //            ↓
+    //    [ Ethernet Header + IP Packet ] = Frame (링크 계층)
     @PostMapping("/test/serialize")
     public ApiResponse<Void> serialize() {
 
@@ -143,14 +139,6 @@ public class AppController {
         for(int i = 0; i < hexArray.length; i++) tcpSegment[i + tcpHeader.length] = hexArray[i];
         log.info("[4] TCP Segment: {}", Arrays.toString(tcpSegment));
 
-
-        return success();
-    }
-
-    @GetMapping("/test/temp")
-    public ApiResponse<Void> temp() {
-
-        DispatcherServlet ds = new DispatcherServlet();
 
         return success();
     }
