@@ -1,7 +1,5 @@
 package me.jisung.springplayground.common.config.kafka;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +9,9 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Configuration
 public class KafkaProducerConfig {
 
@@ -18,6 +19,8 @@ public class KafkaProducerConfig {
     private String bootstrapServers;
 
     private final String[] acks = {"0", "1", "all"};
+
+    private static final int BATCH_SIZE = 10;
 
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
@@ -40,6 +43,9 @@ public class KafkaProducerConfig {
 
         // 트랜젝션 프로듀서 세팅 - transaction producer setting
         /* props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, UUID.randomUUID());*/
+
+        // batch size setting
+        props.put(ProducerConfig.BATCH_SIZE_CONFIG, BATCH_SIZE);
 
         // producer acknowledge setting
         props.put(ProducerConfig.ACKS_CONFIG, acks[1]);

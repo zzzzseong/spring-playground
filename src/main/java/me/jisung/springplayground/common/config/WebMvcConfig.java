@@ -12,11 +12,13 @@ import java.util.List;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
+    private static final String[] allowedMethods = {"GET", "POST", "PUT", "PATCH", "DELETE"};
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
             .allowedOriginPatterns("*")
-            .allowedMethods("*")
+            .allowedMethods(allowedMethods)
             .allowedHeaders("*")
             .allowCredentials(true);
     }
