@@ -29,6 +29,8 @@ dependencies {
     implementation          'org.springframework.boot:spring-boot-starter-mail'
     implementation          'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+    implementation          'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+
     // messaging
     implementation          'org.springframework.boot:spring-boot-starter-amqp'
     implementation          'org.springframework.kafka:spring-kafka'
