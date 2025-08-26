@@ -1,6 +1,6 @@
 services:
-  db:
-    image: mysql:latest
+  mysql:
+    image: mysql:9.4.0
     container_name: mysql
     ports:
       # 호스트와 컨테이너의 포트를 연결
@@ -14,8 +14,19 @@ services:
       # 로컬저장경로:도커저장경로 - 해당 경로에 작성된 DDL 컨테이너 생성 시 자동실행 (.sql .sh 파일 실행) (로컬 경로변경 가능)
       - ./docker/mysql/init:/docker-entrypoint-initdb.d
 
+  oradledb:
+      image: zzzzseong/oracle-db:19.3.0
+      container_name: oradledb
+      ports:
+        - "1521:1521"
+      environment:
+        ORACLE_PASSWORD: admin
+        TZ: Asia/Seoul
+      volumes:
+        - ./docker/oradledb/data:/opt/oracle/oradata
+
   valkey:
-    image: valkey/valkey:latest
+    image: valkey/valkey:8.1.3
     container_name: valkey
     ports:
       - "6380:6379"
@@ -23,7 +34,7 @@ services:
       - ./docker/valkey/data:/data
 
   mongodb:
-    image: mongo:latest
+    image: mongo:8.0.13-noble
     container_name: mongodb
     ports:
       - "27017:27017"
@@ -48,3 +59,7 @@ services:
       RABBITMQ_ERLANG_COOKIE: rabbitmq
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
+
+
+
+# redis:8.2.1
