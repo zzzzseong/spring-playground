@@ -20,4 +20,10 @@ public class StringUtil {
     public static String ifEmpty(String target, String defaultValue, String nonNullValue) {
         return isEmpty(target) ? defaultValue : nonNullValue;
     }
+
+    public static String build(String...parts) {
+        StringBuilder builder = new StringBuilder();
+        for (String part : parts) builder.append(part);
+        return builder.toString();
+    }
 }
