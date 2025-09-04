@@ -3,6 +3,7 @@ package me.jisung.springplayground.common.util;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tika.Tika;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,12 +16,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-@Slf4j(topic = "FileUtil")
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class FileUtil {
 
-    private static final String DEFAULT_CONTENT_TYPE = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+    private static final Tika tika = new Tika();
 
+    private static final String CONTENT_TYPE_DEFAULT = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+
+    /**
+     * Detects the MIME type of the content provided by the given InputStream.
+     *
+     * @param is the InputStream containing the content to be analyzed
+     * @return the detected MIME type as a String (e.g., "image/png", "application/pdf")
+     * @throws IOException if an I/O error occurs while reading the InputStream
+     */
+    public static String getMimeType(InputStream is) throws IOException {
+        return tika.detect(is);
+    }
 
     /**
      * Loads a file from the classpath and converts it into a {@link MultipartFile}.
@@ -39,7 +52,7 @@ public class FileUtil {
             String filename = resource.getFilename();
             byte[] content = resource.getInputStream().readAllBytes();
             String contentType = Optional.ofNullable(Files.probeContentType(Paths.get(filename)))
-                    .orElse(DEFAULT_CONTENT_TYPE);
+                    .orElse(CONTENT_TYPE_DEFAULT);
 
             return new SimpleMultipartFile(filename, filename, contentType ,content);
         } catch (IOException e) {

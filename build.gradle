@@ -76,6 +76,9 @@ dependencies {
     implementation          'com.amazonaws:aws-java-sdk-s3'
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.997')
 
+    // file
+    implementation          'org.apache.tika:tika-core:3.2.2'
+
     // test 
     testImplementation      'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly         'org.junit.platform:junit-platform-launcher'
