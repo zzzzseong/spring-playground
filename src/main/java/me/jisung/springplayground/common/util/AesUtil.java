@@ -16,7 +16,7 @@ import java.util.Base64;
  * AES(Advanced Encryption Standard) Utility Class
  * <br> block-size supports AES-128(16byte key), AES-192(24byte key), AES-256(32byte key)
  * */
-@Slf4j(topic = "AesUtil")
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AesUtil {
 
