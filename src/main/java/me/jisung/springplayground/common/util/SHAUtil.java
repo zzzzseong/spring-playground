@@ -11,6 +11,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
+/**
+ * 단방향 암호화
+ * */
 @Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SHAUtil {

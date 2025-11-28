@@ -1,29 +1,111 @@
 services:
   mysql:
-    image: mysql:9.4.0
-    container_name: mysql
+    image: mysql:9.4.0 # 실행할 이미지 및 버전
+    container_name: mysql # 컨테이너 이름 설정
     ports:
-      # 호스트와 컨테이너의 포트를 연결
-      - "3307:3306"
+      - "3307:3306" # 로컬 호스트 포트와 가상 컨테이너의 포트를 연결
     environment:
-      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_ROOT_PASSWORD: admin # MySQL root 계정 암호 설정
       TZ: Asia/Seoul
     volumes:
-      # 로컬저장경로:도커저장경로 - 컨테이너 종료 후에도 데이터를 로컬에 저장하여 유지 (로컬 경로변경 가능)
-      - ./docker/mysql/data:/var/lib/mysql
-      # 로컬저장경로:도커저장경로 - 해당 경로에 작성된 DDL 컨테이너 생성 시 자동실행 (.sql .sh 파일 실행) (로컬 경로변경 가능)
-      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+      - ./docker/mysql/data:/var/lib/mysql # 로컬저장경로:도커저장경로 - 컨테이너 종료 후에도 데이터를 로컬에 저장하여 유지 (로컬 경로변경 가능)
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d # 로컬저장경로:도커저장경로 - 해당 경로에 작성된 DDL 컨테이너 생성 시 자동실행 (.sql .sh 파일 실행) (로컬 경로변경 가능)
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"] # 실행할 명령어 - MySQL에 ping 전송
+      interval: 10s # 10초마다 헬스체크
+      timeout: 5s # 5초 안에 응답이 없을 시 실패 처리
+      retries: 3 # 3번 연속 헬스체크 실패 시 unhealthy
+      start_period: 30s # 시작 후 30초는 실패해도 카운트 하지 않음
+    deploy:
+      resources:
+        limits:
+          cpus: '1' # CPU 1코어
+          memory: 512M # 메모리 512MB (256M도 가능하지만 안정성 고려)
+        reservations:
+          cpus: '0.25' # 최소 보장 CPU
+          memory: 128M # 최소 보장 메모리
+    networks:
+      - app-network # 컨테이너 통신을 위한 가상 네트워크 지정
+    restart: unless-stopped # 재시작 정책
 
-  oradledb:
+  oracledb:
       image: zzzzseong/oracle-db:19.3.0
-      container_name: oradledb
+      container_name: oracledb
       ports:
         - "1521:1521"
       environment:
         ORACLE_PASSWORD: admin
         TZ: Asia/Seoul
       volumes:
-        - ./docker/oradledb/data:/opt/oracle/oradata
+        - ./docker/oracledb/data:/opt/oracle/oradata
+      deploy:
+        resources:
+          limits:
+            cpus: '1'
+            memory: 2G  # Oracle은 최소 2G 권장
+          reservations:
+            cpus: '0.5'
+            memory: 512M
+      networks:
+        - app-network
+      restart: unless-stopped
+
+  postgresql:
+    image: postgres:17.2
+    container_name: postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: postgres  # 기본 데이터베이스
+      TZ: Asia/Seoul
+      PGDATA: /var/lib/postgresql/data/pgdata  # 데이터 저장 경로
+    volumes:
+      - ./docker/postgresql/data:/var/lib/postgresql/data
+      - ./docker/postgresql/init:/docker-entrypoint-initdb.d  # 초기화 SQL 스크립트
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin -d postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:8.2.1
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./docker/redis/data:/data
+    # Redis 설정 파일 추가 가능
+    # command: redis-server /usr/local/etc/redis/redis.conf
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M  # Redis는 가볍게
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    networks:
+      - app-network
 
   valkey:
     image: valkey/valkey:8.1.3
@@ -32,6 +114,24 @@ services:
       - "6380:6379"
     volumes:
       - ./docker/valkey/data:/data
+    # Valkey 설정 파일 추가 가능
+    # command: valkey-server /usr/local/etc/valkey/valkey.conf
+    healthcheck:
+      test: [ "CMD", "valkey-cli", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.1'
+          memory: 64M
+    networks:
+      - app-network
+    restart: unless-stopped
 
   mongodb:
     image: mongo:8.0.13-noble
@@ -43,15 +143,28 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: admin
     volumes:
       - ./docker/mongodb/data:/data/db # 데이터 영구 저장을 위한 볼륨
+      # 설정 파일 추가 가능
+      # - ./docker/mongodb/mongod.conf:/etc/mongod.conf
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    networks:
+      - app-network
+    restart: unless-stopped
 
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: rabbitmq
-    volumes:
-      # RabbitMQ 설정을 따로 커스터마이징할 게 아니라면, 그냥 아래처럼 /etc/rabbitmq/ 마운트를 삭제하는 게 깔끔함
-      # - ./docker/rabbitmq/etc/:/etc/rabbitmq/
-      - ./docker/rabbitmq/data/:/var/lib/rabbitmq/
-      - ./docker/rabbitmq/logs/:/var/log/rabbitmq/
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -59,14 +172,31 @@ services:
       RABBITMQ_ERLANG_COOKIE: rabbitmq
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
+      TZ: Asia/Seoul
+    volumes:
+      # RabbitMQ 설정을 따로 커스터마이징할 게 아니라면, 그냥 아래처럼 /etc/rabbitmq/ 마운트를 삭제하는 게 깔끔함
+      # - ./docker/rabbitmq/etc/:/etc/rabbitmq/
+      - ./docker/rabbitmq/data/:/var/lib/rabbitmq/
+      - ./docker/rabbitmq/logs/:/var/log/rabbitmq/
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    networks:
+      - app-network
+    restart: unless-stopped
 
-  redis:
-      image: redis:8.2.1
-      container_name: redis
-      ports:
-          - "6379:6379"
-      volumes:
-          - ./docker/redis/data:/data
-
-
-# redis:8.2.1
+# 네트워크 설정 추가
+networks:
+  app-network:
+    driver: bridge
+    name: playground-network
