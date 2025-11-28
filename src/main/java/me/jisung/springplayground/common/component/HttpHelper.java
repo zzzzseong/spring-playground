@@ -22,9 +22,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j(topic = "HttpComponent")
 public class HttpHelper {
 
     private final WebClient webClient;

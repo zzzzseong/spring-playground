@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@Slf4j(topic = "ExcelUtil")
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ExcelUtil {
 

@@ -17,10 +17,10 @@ import java.util.Objects;
 /**
  * validation -> aop -> controller -> exception throws -> aop -> exception handler
  * */
+@Slf4j
 @Aspect
 @Component
 @RequiredArgsConstructor
-@Slf4j(topic = "ControllerLogAop")
 public class ApiLogAop {
 
 

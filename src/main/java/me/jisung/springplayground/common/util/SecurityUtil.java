@@ -1,6 +1,5 @@
 package me.jisung.springplayground.common.util;
 
-import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +10,9 @@ import me.jisung.springplayground.user.entity.UserEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-@Slf4j(topic = "SecurityUtil")
+import java.util.Objects;
+
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUtil {
     private static final String ANONYMOUS_USER = "anonymousUser";

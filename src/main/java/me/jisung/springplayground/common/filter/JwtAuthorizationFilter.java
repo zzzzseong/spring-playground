@@ -20,9 +20,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j(topic = "JwtAuthorizationFilter")
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
     private final UserDetailsServiceImpl userDetailsService;

@@ -15,8 +15,8 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.net.BindException;
 import java.util.Objects;
 
+@Slf4j
 @RestControllerAdvice
-@Slf4j(topic = "ApiExceptionHandler")
 public class ApiExceptionHandler {
 
     @ExceptionHandler(ApiException.class)

@@ -16,9 +16,9 @@ import java.io.File;
 /**
  * <a href='https://www.baeldung.com/spring-email'>Baeldung Guide</a>
  * */
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j(topic = "MainSender")
 public class AsyncMailSender {
 
     private final JavaMailSender javaMailSender;

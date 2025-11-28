@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
-@Slf4j(topic = "CustomMessageConverter")
+@Slf4j
 public class CustomMessageConverter extends AbstractHttpMessageConverter<Object> {
 
     public CustomMessageConverter() {

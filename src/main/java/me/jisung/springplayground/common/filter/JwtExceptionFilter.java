@@ -23,9 +23,9 @@ import java.util.Objects;
  * JwtAuthorizationFilter 에서 발생한 ApiException 은 ExceptionHandler 에서 처리하지 않는다.
  * JwtExceptionFilter 를 별도로 정의해 클라이언트에 ApiException 반환.
  * */
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j(topic = "JwtExceptionFilter")
 public class JwtExceptionFilter extends OncePerRequestFilter {
 
     @Override

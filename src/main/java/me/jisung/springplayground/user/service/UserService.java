@@ -1,6 +1,5 @@
 package me.jisung.springplayground.user.service;
 
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.component.JwtProvider;
@@ -18,9 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j(topic = "UserService")
 @Transactional(readOnly = true)
 public class UserService {
 

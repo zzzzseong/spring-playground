@@ -3,7 +3,6 @@ package me.jisung.springplayground.common.config;
 import io.netty.channel.ChannelOption;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import io.netty.handler.timeout.WriteTimeoutHandler;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -16,7 +15,6 @@ import reactor.netty.http.client.HttpClient;
 import java.time.Duration;
 
 @Configuration
-@Slf4j(topic = "WebClientConfig")
 public class WebClientConfig {
 
     /* 서버 연결 시도 시 타임아웃 설정 - 5s */

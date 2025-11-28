@@ -10,9 +10,9 @@ import me.jisung.springplayground.product.repository.ProductUserRepository;
 import me.jisung.springplayground.user.entity.UserEntity;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j(topic = "ProductUserService")
 public class ProductUserService {
 
     private final ProductUserRepository productUserRepository;

@@ -1,8 +1,5 @@
 package me.jisung.springplayground.common.interceptor;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +17,13 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j(topic = "StompChannelInterceptor")
 public class StompChannelInterceptor implements ChannelInterceptor {
 
     private final UserRepository userRepository;

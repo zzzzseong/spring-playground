@@ -21,10 +21,10 @@ import java.util.Arrays;
 
 import static me.jisung.springplayground.common.entity.ApiResponse.success;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/app")
-@Slf4j(topic = "AppController")
 public class AppController {
 
     @Value("${aes_encrypt_key}")

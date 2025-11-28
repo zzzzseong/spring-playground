@@ -18,9 +18,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
-@Slf4j(topic = "MessageController")
 public class MessageController {
 
     private final ChatMessageRepository chatMessageRepository;

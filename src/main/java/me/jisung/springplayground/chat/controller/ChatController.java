@@ -1,8 +1,5 @@
 package me.jisung.springplayground.chat.controller;
 
-import static me.jisung.springplayground.common.entity.ApiResponse.success;
-
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.chat.collection.ChatMessageCollection;
@@ -20,18 +17,16 @@ import me.jisung.springplayground.user.entity.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+import static me.jisung.springplayground.common.entity.ApiResponse.success;
+
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/chat")
-@Slf4j(topic = "ChatController")
 public class ChatController {
 
     private final ChatRoomRepository chatRoomRepository;

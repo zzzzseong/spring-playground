@@ -12,9 +12,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j(topic = "KafkaProducer")
 public class KafkaProducerImpl implements KafkaProducer {
 
     private final KafkaTemplate<String, String> kafkaTemplate;

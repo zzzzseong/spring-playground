@@ -34,9 +34,9 @@ import org.springframework.transaction.support.TransactionTemplate;
  * }
  * }</pre>
  */
+@Slf4j
 @Component
 @RequiredArgsConstructor
-@Slf4j(topic = "TransactionHelper")
 public class TransactionHelper {
 
     private final PlatformTransactionManager transactionManager;

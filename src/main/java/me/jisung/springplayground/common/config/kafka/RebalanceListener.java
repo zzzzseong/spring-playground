@@ -1,14 +1,15 @@
 package me.jisung.springplayground.common.config.kafka;
 
-import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.common.TopicPartition;
 
+import java.util.Collection;
+
 /**
  * 리밸런스 이벤트를 처리하기 위한 리스너 클래스
  * */
-@Slf4j(topic = "RebalanceListener")
+@Slf4j
 public class RebalanceListener implements ConsumerRebalanceListener {
 
     @Override

@@ -1,17 +1,13 @@
 package me.jisung.springplayground.common.controller;
 
-import static me.jisung.springplayground.common.entity.ApiResponse.success;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.jisung.springplayground.common.entity.ApiResponse;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import static me.jisung.springplayground.common.entity.ApiResponse.success;
 
 /**
  * MessageConverter 테스트를 위한 Controller
@@ -20,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
  * 테스트를 위해 {@link me.jisung.springplayground.common.config.WebMvcConfig}에 {@link me.jisung.springplayground.common.converter.CustomMessageConverter}를 추가해야 합니다.
  * </p>
  * */
+@Slf4j
 @RestController
 @RequestMapping("/common/converter")
-@Slf4j(topic = "MessageConverterController")
 public class MessageConverterController {
 
 
