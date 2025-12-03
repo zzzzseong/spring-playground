@@ -71,7 +71,10 @@ public class SecurityConfig {
             new AntPathRequestMatcher("/api/**"),
 
             /* websocket */
-            new AntPathRequestMatcher("/ws/chat")
+            new AntPathRequestMatcher("/ws/chat"),
+
+            /* actuator */
+            new AntPathRequestMatcher("/actuator/**")
         );
     }
 
