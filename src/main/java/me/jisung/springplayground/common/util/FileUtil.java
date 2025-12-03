@@ -24,6 +24,10 @@ public class FileUtil {
 
     private static final String CONTENT_TYPE_DEFAULT = MediaType.APPLICATION_OCTET_STREAM_VALUE;
 
+    public static boolean isEmpty(MultipartFile file) throws IOException {
+        return file == null || file.isEmpty();
+    }
+
     /**
      * Detects the MIME type of the content provided by the given InputStream.
      *
