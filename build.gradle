@@ -18,6 +18,17 @@ repositories {
 }
 
 dependencies {
+    /*
+     * Gradle 의존성 선언 키워드 설명:
+     * 
+     * - implementation: 컴파일 타임과 런타임 모두 필요. 내부 구현에 사용되며 다른 모듈에 노출되지 않음 (가장 많이 사용)
+     * - compileOnly: 컴파일 타임에만 필요. 런타임에는 이미 제공되거나 불필요한 라이브러리 (예: Lombok)
+     * - runtimeOnly: 런타임에만 필요. 컴파일에는 불필요하고 실행 시에만 사용 (예: JDBC 드라이버)
+     * - annotationProcessor: 어노테이션 처리기. 컴파일 타임에 어노테이션을 분석하여 코드 생성 (예: Lombok, MapStruct, QueryDSL)
+     * - testImplementation: 테스트 컴파일/런타임에만 필요. 프로덕션 코드에는 포함되지 않음
+     * - testRuntimeOnly: 테스트 런타임에만 필요. 테스트 실행 시에만 사용되는 라이브러리
+     */
+    
     // spring starters
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -29,12 +40,18 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-    implementation 'org.springframework.boot:spring-boot-starter-amqp' // rabbitmq
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
     implementation 'org.springframework.kafka:spring-kafka'
 
-    // database
+    // Database
     implementation 'com.mysql:mysql-connector-j'
     implementation 'org.postgresql:postgresql:42.7.8'
+
+    // AWS - Nov 30, 2025 released
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter:3.4.2'
+
+    // Prometheus - Nov 06, 2025 released
+    implementation 'io.micrometer:micrometer-registry-prometheus:1.16.0'
 
     // websocket 
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
@@ -47,37 +64,33 @@ dependencies {
     implementation      'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
 
-    // jwt 
-    implementation          'io.jsonwebtoken:jjwt-api:0.12.6'
-    implementation          'io.jsonwebtoken:jjwt-impl:0.12.6'
-    implementation          'io.jsonwebtoken:jjwt-jackson:0.12.6'
+    // JWT - Aug 20, 2025 released
+    implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.13.0'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.13.0'
 
-    // excel 
-    implementation          'org.apache.poi:poi:5.3.0'
-    implementation          'org.apache.poi:poi-ooxml:5.3.0'
+    // Excel - Nov 30, 2025 released
+    implementation 'org.apache.poi:poi:5.5.1'
+    implementation 'org.apache.poi:poi-ooxml:5.5.1'
 
     // json 
-    implementation          'com.google.code.gson:gson'
+    implementation 'com.google.code.gson:gson'
 
     // querydsl 
-    implementation          'com.querydsl:querydsl-jpa:5.1.0:jakarta'
-    annotationProcessor     'com.querydsl:querydsl-apt:5.1.0:jakarta'
-    annotationProcessor     'jakarta.annotation:jakarta.annotation-api'
-    annotationProcessor     'jakarta.persistence:jakarta.persistence-api'
-
-    // aws
-    implementation          'com.amazonaws:aws-java-sdk-s3'
-    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.997')
+    implementation      'com.querydsl:querydsl-jpa:5.1.0:jakarta'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 
     // file
-    implementation          'org.apache.tika:tika-core:3.2.2'
+    implementation 'org.apache.tika:tika-core:3.2.2'
 
     // jasypt - environment value encrypt helper
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 
     // test 
-    testImplementation      'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly         'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly    'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {

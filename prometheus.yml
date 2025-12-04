@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 15s      # 15초마다 메트릭 수집
+  evaluation_interval: 15s  # 15초마다 규칙 평가
+  scrape_timeout: 10s       # 수집 타임아웃
+
+# Prometheus 자체 모니터링 설정
+scrape_configs:
+  # Spring Boot 애플리케이션 메트릭 수집
+  - job_name: 'spring-playground'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['host.docker.internal:9000']  # Docker에서 호스트 머신 접근
+        labels:
+          application: 'spring-playground'
+          environment: 'local'
