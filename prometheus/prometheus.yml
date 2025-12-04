@@ -1,0 +1,28 @@
+global:
+  scrape_interval: 15s      # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s  # Evaluate rules every 15 seconds. The default is every 1 minute.
+  scrape_timeout: 10s       # Set scrape timeout
+
+# Alert Rules 파일 경로 설정
+rule_files:
+  - "/etc/prometheus/alert_rules.yml"
+
+# Alertmanager 설정 (선택사항 - 알림을 실제로 보내려면 필요)
+# alerting:
+#   alertmanagers:
+#     - static_configs:
+#         - targets:
+#           - alertmanager:9093
+
+# Prometheus 자체 모니터링 설정
+scrape_configs:
+  # Spring Boot 애플리케이션 메트릭 수집
+  - job_name: 'spring-playground'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 15s
+    static_configs:
+      - targets: ['host.docker.internal:9000']  # Docker에서 호스트 머신 접근
+        labels:
+          application: 'spring-playground'
+          environment: 'local'
+

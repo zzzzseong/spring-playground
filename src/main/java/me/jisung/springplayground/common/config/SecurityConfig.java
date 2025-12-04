@@ -55,8 +55,8 @@ public class SecurityConfig {
         );
 
         httpSecurity.authorizeHttpRequests(auth -> auth
-            .requestMatchers(new AntPathRequestMatcher("/**")).access(this::hasIpAddress)
             .requestMatchers(publicEndPoints()).permitAll()
+            .requestMatchers(new AntPathRequestMatcher("/**")).access(this::hasIpAddress)
             .anyRequest().authenticated()
         );
 
