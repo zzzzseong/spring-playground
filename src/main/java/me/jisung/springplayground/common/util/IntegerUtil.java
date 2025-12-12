@@ -24,11 +24,10 @@ public class IntegerUtil {
 
         try {
             int i = Integer.parseInt(number);
-            return Math.max(Math.min(i, maxValue), minValue);
-        } catch (NumberFormatException e) {
+            return Math.clamp(i ,maxValue, minValue);
+        } catch (NumberFormatException _) {
             // Return default value if not a number or out of integer range
             return defaultValue;
         }
     }
-
 }
