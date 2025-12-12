@@ -73,6 +73,10 @@ dependencies {
     implementation 'org.apache.poi:poi:5.5.1'
     implementation 'org.apache.poi:poi-ooxml:5.5.1'
 
+    // AWS - Nov 30, 2025 released
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter:3.4.2'
+    implementation 'software.amazon.awssdk:s3:2.40.4'
+
     // json 
     implementation 'com.google.code.gson:gson'
 
