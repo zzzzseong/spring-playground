@@ -11,6 +11,8 @@ import java.util.Objects;
 public class StringUtil {
 
     private static final String NULL = "null";
+    private static final int DEFAULT_TRUNCATE_LENGTH = 2_000;
+
 
 
     public static boolean isEmpty(String value) {
@@ -53,5 +55,40 @@ public class StringUtil {
                 .withoutPadding()
                 .encodeToString(bytes)
                 .substring(0, length);
+    }
+
+    public static String removeEmoji(String value) {
+        if(isEmpty(value)) return null;
+
+        StringBuilder sb = new StringBuilder();
+
+        value.codePoints().forEach(cp -> {
+            char[] chars = Character.toChars(cp);
+            String s = new String(chars);
+
+            // 줄바꿈/탭/공백은 유지
+            if (cp == '\n' || cp == '\r' || cp == '\t' || cp == ' ') {
+                sb.append((char) cp);
+                return;
+            }
+
+            try {
+                String encoded = new String(s.getBytes("EUC-KR"), "EUC-KR");
+                if(s.equals(encoded)) sb.append(s); // 변형 없음 → EUC-KR에서 표현 가능한 문자
+            } catch (Exception e) {
+                // 인코딩 자체가 실패할 일은 거의 없음.
+            }
+        });
+
+        return sb.toString();
+    }
+
+    public static String truncate(String value) {
+        return truncate(value, DEFAULT_TRUNCATE_LENGTH);
+    }
+    public static String truncate(String value, int length) {
+        if (value == null) return null;
+        if (value.length() <= length) return value;
+        return value.substring(0, length) + "... (truncated)";
     }
 }
