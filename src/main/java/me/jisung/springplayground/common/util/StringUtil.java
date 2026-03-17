@@ -16,7 +16,7 @@ public class StringUtil {
 
 
     public static boolean isEmpty(String value) {
-        return value == null || value.isEmpty() || NULL.equals(value);
+        return value == null || value.trim().isEmpty() || NULL.equals(value);
     }
     public static boolean isEmpty(Character value) {
         return value == null || value == '\u0000';

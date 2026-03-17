@@ -14,11 +14,16 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
+import org.springframework.web.reactive.function.client.WebClientRequestException;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.PrematureCloseException;
+import reactor.util.retry.Retry;
 
+import java.io.IOException;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -32,6 +37,11 @@ public class HttpHelper {
     private final Consumer<HttpHeaders> emptyHeaders = httpHeaders -> {};
     private final Consumer<HttpHeaders> jsonHeaders = httpHeaders -> httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
     private final Consumer<HttpHeaders> formDataHeaders = httpHeaders -> httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.MULTIPART_FORM_DATA_VALUE);
+    private static final Retry DEFAULT_RETRY_SPEC = Retry
+            .backoff(2, Duration.ofSeconds(1))
+            .maxBackoff(Duration.ofSeconds(3))
+            .filter(HttpHelper::isRetryableException)
+            .doBeforeRetry(signal -> log.warn("[HTTP RETRY] uri 요청 실패 후 재시도 (attempt={}), cause: {}", signal.totalRetries() + 1, signal.failure().getMessage()));
 
 
     public String post(URI uri) throws HttpStatusCodeException {
@@ -57,6 +67,7 @@ public class HttpHelper {
                 .onStatus(HttpStatusCode::is4xxClientError, this::handleHttpError)
                 .onStatus(HttpStatusCode::is5xxServerError, this::handleHttpError)
                 .bodyToMono(String.class)
+                .retryWhen(DEFAULT_RETRY_SPEC)
                 .block();
 
         if(Objects.isNull(response)) throw new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE);
@@ -72,14 +83,15 @@ public class HttpHelper {
         log.info("[GET REQ] uri: {}, headers: {}", uri, this.getHttpHeaders(headers));
 
         String response = webClient
-            .get()
-            .uri(uri)
-            .headers(headers)
-            .retrieve()
+                .get()
+                .uri(uri)
+                .headers(headers)
+                .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError, this::handleHttpError)
                 .onStatus(HttpStatusCode::is5xxServerError, this::handleHttpError)
-            .bodyToMono(String.class)
-            .block();
+                .bodyToMono(String.class)
+                .retryWhen(DEFAULT_RETRY_SPEC)
+                .block();
 
         if(Objects.isNull(response)) throw new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE);
         log.info("[GET RES] response: {}", response);
@@ -98,6 +110,7 @@ public class HttpHelper {
                 .onStatus(HttpStatusCode::is4xxClientError, this::handleHttpError)
                 .onStatus(HttpStatusCode::is5xxServerError, this::handleHttpError)
                 .bodyToMono(String.class)
+                .retryWhen(DEFAULT_RETRY_SPEC)
                 .block();
 
         if(Objects.isNull(response)) throw new HttpServerErrorException(HttpStatus.SERVICE_UNAVAILABLE);
@@ -153,5 +166,14 @@ public class HttpHelper {
             if (statusCode instanceof HttpStatus status) statusText = status.name();
             return Mono.error(new HttpClientErrorException(statusCode, statusText, errBody.getBytes(), StandardCharsets.UTF_8));
         });
+    }
+
+    /** 연결 끊김·타임아웃 등 재시도 대상 예외 여부 */
+    private static boolean isRetryableException(Throwable t) {
+        if (t == null) return false;
+        if (t instanceof WebClientRequestException) return true;
+        if (t instanceof PrematureCloseException) return true;
+        if (t instanceof IOException) return true;
+        return isRetryableException(t.getCause());
     }
 }
