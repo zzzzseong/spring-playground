@@ -6,11 +6,18 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
 @EnableAsync
 @Configuration
 public class AsyncConfig {
+
+    @Bean(destroyMethod = "close")
+    public ExecutorService virtualTaskExecutor() {
+        return Executors.newVirtualThreadPerTaskExecutor();
+    }
 
     @Bean
     public Executor taskExecutor() {
